@@ -33,5 +33,3 @@ The extension provides autocomplete for 65+ Sypnex API methods including:
 
 - VS Code 1.102.0 or higher
 - Works with JavaScript files
-
-**Enjoy coding with Sypnex OS!**
