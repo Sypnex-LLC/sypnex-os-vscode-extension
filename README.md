@@ -2,6 +2,8 @@
 
 VS Code extension that provides IntelliSense and autocomplete support for the Sypnex OS API.
 
+> **🚀 Active Development**: Sypnex OS is an open-source project in active development. We welcome contributions to help reach production readiness. Whether you're interested in feature development, testing, documentation, or UI/UX improvements, contributions are welcome.
+
 ## Features
 
 This extension provides intelligent code completion for the `sypnexAPI` global object that gets injected into Sypnex OS applications:
