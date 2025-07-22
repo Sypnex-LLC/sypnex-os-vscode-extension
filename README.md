@@ -22,7 +22,7 @@ This extension provides intelligent code completion for the `sypnexAPI` global o
 
 ## Supported Methods
 
-The extension provides autocomplete for 65+ Sypnex API methods including:
+The extension provides autocomplete for 65+ Sypnex API methods
 
 ## Requirements
 
