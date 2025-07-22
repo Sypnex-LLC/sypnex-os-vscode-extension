@@ -1,19 +1,18 @@
 {
   "name": "sypnex-os-api-support",
   "displayName": "Sypnex OS API Support",
-  "description": "IntelliSense and autocomplete support for Sypnex OS API",
+  "description": "IntelliSense and autocomplete support for Sypnex OS API in JavaScript projects",
   "version": "0.0.1",
+  	"publisher": "sypnex-team",
   "engines": {
     "vscode": "^1.102.0"
   },
   "categories": [
     "Programming Languages",
-    "Snippets",
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:javascript",
-    "onLanguage:typescript"
+    "onLanguage:javascript"
   ],
   "main": "./dist/extension.js",
   "contributes": {

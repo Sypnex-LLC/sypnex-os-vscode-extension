@@ -449,7 +449,7 @@ class SypnexHoverProvider implements vscode.HoverProvider {
 			
 			if (method) {
 				const markdown = new vscode.MarkdownString();
-				markdown.appendCodeblock(method.signature, 'typescript');
+				markdown.appendCodeblock(method.signature, 'javascript');
 				markdown.appendMarkdown(`\n\n${method.description}`);
 				
 				return new vscode.Hover(markdown);
@@ -464,14 +464,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Register completion provider
 	const completionProvider = vscode.languages.registerCompletionItemProvider(
-		['javascript', 'typescript'],
+		['javascript'],
 		new SypnexCompletionProvider(),
 		'.'
 	);
 
 	// Register hover provider
 	const hoverProvider = vscode.languages.registerHoverProvider(
-		['javascript', 'typescript'],
+		['javascript'],
 		new SypnexHoverProvider()
 	);
 

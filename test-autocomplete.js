@@ -13,7 +13,7 @@ async function testApp() {
     // Test async methods - hover over these
     await sypnexAPI.getSetting('myKey', 'defaultValue');
     await sypnexAPI.deleteVirtualItem('/path/to/file');
-    
+
     // Test file operations - hover over these
     await sypnexAPI.readVirtualFile('/test.txt');
     await sypnexAPI.writeVirtualFile('/output.txt', 'content');
@@ -24,5 +24,4 @@ async function testApp() {
     // Test logging - hover over these
     await sypnexAPI.logInfo('Test message');
     await sypnexAPI.logError('Error message');
-    sypnexAPI.getVirtualItemInfo()
 }
