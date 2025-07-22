@@ -24,13 +24,6 @@ This extension provides intelligent code completion for the `sypnexAPI` global o
 
 The extension provides autocomplete for 65+ Sypnex API methods including:
 
-- **Settings**: `getSetting()`, `setSetting()`, `getAllSettings()`, `deleteSetting()`
-- **Virtual File System**: `readVirtualFile()`, `writeVirtualFile()`, `listVirtualFiles()`, `getVirtualFileStats()`
-- **WebSocket**: `connectSocket()`, `sendMessage()`, `joinRoom()`, `leaveRoom()`
-- **Logging**: `logInfo()`, `logError()`, `logDebug()`, `logWarn()`
-- **Window Management**: `getWindowState()`, `saveWindowState()`
-- **Utilities**: `isInitialized()`, `getAppId()`, `ping()`
-
 ## Requirements
 
 - VS Code 1.102.0 or higher
