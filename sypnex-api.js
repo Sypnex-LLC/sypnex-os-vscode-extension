@@ -1,11 +1,24 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-07-22 08:16:45.036700
+// Generated: 2025-07-22 09:42:27.531552
 
 // === sypnex-api-core.js ===
 // SypnexAPI Core - Main class and initialization
 // This file contains the core SypnexAPI class that gets injected into user app sandboxes
 
+/**
+ * SypnexAPI - Main API class for user applications
+ * Provides access to OS features and services in a sandboxed environment
+ * @class
+ */
 class SypnexAPI {
+    /**
+     * Create a new SypnexAPI instance
+     * @param {string} appId - Unique identifier for the application
+     * @param {object} helpers - Helper functions provided by the OS environment
+     * @param {function} [helpers.getAppSetting] - Function to get app settings
+     * @param {function} [helpers.getAllAppSettings] - Function to get all app settings
+     * @param {function} [helpers.showNotification] - Function to show notifications
+     */
     constructor(appId, helpers = {}) {
         this.appId = appId;
         this.baseUrl = '/api';
@@ -19,6 +32,12 @@ class SypnexAPI {
         this.init();
     }
     
+    /**
+     * Initialize the SypnexAPI instance
+     * Checks for required helper functions and sets up the API
+     * @async
+     * @returns {Promise<void>}
+     */
     async init() {
         try {
             // Check if we have the required helper functions
@@ -33,6 +52,14 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Default implementation for getting app settings via direct API calls
+     * @private
+     * @async
+     * @param {string} key - Setting key to retrieve
+     * @param {*} [defaultValue=null] - Default value if setting not found
+     * @returns {Promise<*>} The setting value or default value
+     */
     // Default implementations that fall back to direct API calls
     async _defaultGetAppSetting(key, defaultValue = null) {
         try {
@@ -48,6 +75,12 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Default implementation for getting all app settings via direct API calls
+     * @private
+     * @async
+     * @returns {Promise<object>} Object containing all app settings
+     */
     async _defaultGetAllAppSettings() {
         try {
             const response = await fetch(`${this.baseUrl}/app-settings/${this.appId}`);
@@ -62,6 +95,12 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Default implementation for showing notifications via console
+     * @private
+     * @param {string} message - Notification message
+     * @param {string} [type='info'] - Notification type (info, error, warn, etc.)
+     */
     _defaultShowNotification(message, type = 'info') {
         console.log(`[${type.toUpperCase()}] ${message}`);
         if (type === 'error') {
@@ -69,6 +108,11 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Get metadata for this application
+     * @async
+     * @returns {Promise<object|null>} Application metadata or null if error
+     */
     async getAppMetadata() {
         try {
             const response = await fetch(`${this.baseUrl}/app-metadata/${this.appId}`);
@@ -83,14 +127,27 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Check if the SypnexAPI has been initialized
+     * @returns {boolean} True if initialized, false otherwise
+     */
     isInitialized() {
         return this.initialized;
     }
     
+    /**
+     * Get the application ID
+     * @returns {string} The application identifier
+     */
     getAppId() {
         return this.appId;
     }
     
+    /**
+     * Get the saved window state for this application
+     * @async
+     * @returns {Promise<object|null>} Window state object or null if not found
+     */
     async getWindowState() {
         try {
             const response = await fetch(`${this.baseUrl}/window-state/${this.appId}`);
@@ -105,6 +162,12 @@ class SypnexAPI {
         }
     }
     
+    /**
+     * Save the window state for this application
+     * @async
+     * @param {object} state - Window state object to save
+     * @returns {Promise<boolean>} True if saved successfully, false otherwise
+     */
     async saveWindowState(state) {
         try {
             const response = await fetch(`${this.baseUrl}/window-state/${this.appId}`, {
@@ -146,6 +209,13 @@ if (typeof window !== 'undefined') {
 // Extend SypnexAPI with settings methods
 Object.assign(SypnexAPI.prototype, {
     
+    /**
+     * Get an application setting
+     * @async
+     * @param {string} key - Setting key to retrieve
+     * @param {*} [defaultValue=null] - Default value if setting not found
+     * @returns {Promise<*>} The setting value or default value
+     */
     async getSetting(key, defaultValue = null) {
         try {
             return await this.getAppSetting(key, defaultValue);
@@ -155,6 +225,13 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Set an application setting
+     * @async
+     * @param {string} key - Setting key to set
+     * @param {*} value - Value to store
+     * @returns {Promise<boolean>} True if saved successfully, false otherwise
+     */
     async setSetting(key, value) {
         try {
             const response = await fetch(`${this.baseUrl}/app-settings/${this.appId}/${key}`, {
@@ -178,6 +255,11 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Get all application settings
+     * @async
+     * @returns {Promise<object>} Object containing all app settings
+     */
     async getAllSettings() {
         try {
             return await this.getAllAppSettings();
@@ -187,6 +269,12 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Delete an application setting
+     * @async
+     * @param {string} key - Setting key to delete
+     * @returns {Promise<boolean>} True if deleted successfully, false otherwise
+     */
     async deleteSetting(key) {
         try {
             const response = await fetch(`${this.baseUrl}/app-settings/${this.appId}/${key}`, {
@@ -206,6 +294,14 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Get a user preference value
+     * @async
+     * @param {string} category - Preference category
+     * @param {string} key - Preference key
+     * @param {*} [defaultValue=null] - Default value if preference not found
+     * @returns {Promise<*>} The preference value or default value
+     */
     async getPreference(category, key, defaultValue = null) {
         try {
             const response = await fetch(`${this.baseUrl}/preferences/${category}/${key}`);
@@ -220,6 +316,14 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Set a user preference value
+     * @async
+     * @param {string} category - Preference category
+     * @param {string} key - Preference key
+     * @param {*} value - Value to store
+     * @returns {Promise<boolean>} True if saved successfully, false otherwise
+     */
     async setPreference(category, key, value) {
         try {
             const response = await fetch(`${this.baseUrl}/preferences/${category}/${key}`, {
@@ -1197,6 +1301,10 @@ Object.assign(SypnexAPI.prototype, {
 
 // Scale compensation utilities for file explorer
 const fileExplorerUtils = {
+    /**
+     * Detect the current app scale from CSS transform
+     * @returns {number} Scale factor (1.0 = 100%, 0.8 = 80%, etc.)
+     */
     // Detect the current app scale from CSS transform
     detectAppScale() {
         try {
@@ -1242,6 +1350,12 @@ const fileExplorerUtils = {
         }
     },
 
+    /**
+     * Convert screen coordinates to app coordinates accounting for scale
+     * @param {number} screenX - Screen X coordinate
+     * @param {number} screenY - Screen Y coordinate
+     * @returns {object} Object with x and y properties in app coordinates
+     */
     // Convert screen coordinates to app coordinates
     screenToAppCoords(screenX, screenY) {
         const scale = this.detectAppScale();
@@ -1251,6 +1365,11 @@ const fileExplorerUtils = {
         };
     },
 
+    /**
+     * Get scaled element bounding rectangle (compensates for app scaling)
+     * @param {Element} element - DOM element to get bounds for
+     * @returns {object} DOMRect-like object with scaled coordinates
+     */
     // Get scaled element rect (compensates for app scaling)
     getScaledBoundingClientRect(element) {
         const rect = element.getBoundingClientRect();

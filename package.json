@@ -35,7 +35,8 @@
     "lint": "eslint src",
     "test": "vscode-test",
     "update-api": "node update-api.js",
-    "build-extension": "npm run update-api && npm run compile && vsce package"
+    "build-extension": "npm run update-api && npm run compile && vsce package",
+    "build-extension-dev": "npm run update-api && npm run compile && vsce package --no-prepublish"
   },
   "devDependencies": {
     "@types/vscode": "^1.102.0",

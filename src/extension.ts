@@ -5,6 +5,78 @@ import * as vscode from 'vscode';
 // Sypnex API method definitions (auto-generated)
 const sypnexApiMethods = [
 	{
+		name: 'init',
+		signature: 'init(): Promise<any>',
+		description: 'Initialize the SypnexAPI instance',
+		isAsync: true
+	},
+	{
+		name: 'getAppMetadata',
+		signature: 'getAppMetadata(): Promise<any>',
+		description: 'Get metadata for this application',
+		isAsync: true
+	},
+	{
+		name: 'isInitialized',
+		signature: 'isInitialized(): any',
+		description: 'Check if the SypnexAPI has been initialized',
+		isAsync: false
+	},
+	{
+		name: 'getAppId',
+		signature: 'getAppId(): any',
+		description: 'Get the application ID',
+		isAsync: false
+	},
+	{
+		name: 'getWindowState',
+		signature: 'getWindowState(): Promise<any>',
+		description: 'Get the saved window state for this application',
+		isAsync: true
+	},
+	{
+		name: 'saveWindowState',
+		signature: 'saveWindowState(state: any): Promise<any>',
+		description: 'Save the window state for this application',
+		isAsync: true
+	},
+	{
+		name: 'getSetting',
+		signature: 'getSetting(key: any, defaultValue?: any): Promise<any>',
+		description: 'Get an application setting',
+		isAsync: true
+	},
+	{
+		name: 'setSetting',
+		signature: 'setSetting(key: any, value: any): Promise<any>',
+		description: 'Set an application setting',
+		isAsync: true
+	},
+	{
+		name: 'getAllSettings',
+		signature: 'getAllSettings(): Promise<any>',
+		description: 'Get all application settings',
+		isAsync: true
+	},
+	{
+		name: 'deleteSetting',
+		signature: 'deleteSetting(key: any): Promise<any>',
+		description: 'Delete an application setting',
+		isAsync: true
+	},
+	{
+		name: 'getPreference',
+		signature: 'getPreference(category: any, key: any, defaultValue?: any): Promise<any>',
+		description: 'Get a user preference value',
+		isAsync: true
+	},
+	{
+		name: 'setPreference',
+		signature: 'setPreference(category: any, key: any, value: any): Promise<any>',
+		description: 'Set a user preference value',
+		isAsync: true
+	},
+	{
 		name: 'connectSocket',
 		signature: 'connectSocket(url?: any, options?: any): Promise<any>',
 		description: 'Connect to Socket.IO server for this app instance',
@@ -217,7 +289,7 @@ const sypnexApiMethods = [
 	{
 		name: 'showFileExplorer',
 		signature: 'showFileExplorer(options?: any): Promise<any>',
-		description: 'Show a file explorer modal for selecting files or directories',
+		description: 'Detect the current app scale from CSS transform',
 		isAsync: true
 	},
 	{
@@ -293,78 +365,6 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
-		name: 'init',
-		signature: 'init(): Promise<any>',
-		description: 'Initialize the SypnexAPI instance',
-		isAsync: true
-	},
-	{
-		name: 'getAppMetadata',
-		signature: 'getAppMetadata(): Promise<any>',
-		description: 'getAppMetadata method from Sypnex API',
-		isAsync: true
-	},
-	{
-		name: 'isInitialized',
-		signature: 'isInitialized(): any',
-		description: 'Check if the API is initialized',
-		isAsync: false
-	},
-	{
-		name: 'getAppId',
-		signature: 'getAppId(): any',
-		description: 'Get the current application ID',
-		isAsync: false
-	},
-	{
-		name: 'getWindowState',
-		signature: 'getWindowState(): Promise<any>',
-		description: 'getWindowState method from Sypnex API',
-		isAsync: true
-	},
-	{
-		name: 'saveWindowState',
-		signature: 'saveWindowState(state: any): Promise<any>',
-		description: 'saveWindowState method from Sypnex API',
-		isAsync: true
-	},
-	{
-		name: 'getSetting',
-		signature: 'getSetting(key: any, defaultValue?: any): Promise<any>',
-		description: 'Get an application setting value',
-		isAsync: true
-	},
-	{
-		name: 'setSetting',
-		signature: 'setSetting(key: any, value: any): Promise<any>',
-		description: 'Set an application setting value',
-		isAsync: true
-	},
-	{
-		name: 'getAllSettings',
-		signature: 'getAllSettings(): Promise<any>',
-		description: 'Get all application settings',
-		isAsync: true
-	},
-	{
-		name: 'deleteSetting',
-		signature: 'deleteSetting(key: any): Promise<any>',
-		description: 'Delete an application setting',
-		isAsync: true
-	},
-	{
-		name: 'getPreference',
-		signature: 'getPreference(category: any, key: any, defaultValue?: any): Promise<any>',
-		description: 'getPreference method from Sypnex API',
-		isAsync: true
-	},
-	{
-		name: 'setPreference',
-		signature: 'setPreference(category: any, key: any, value: any): Promise<any>',
-		description: 'setPreference method from Sypnex API',
-		isAsync: true
-	},
-	{
 		name: 'detectAppScale',
 		signature: 'detectAppScale(): any',
 		description: 'detectAppScale method from Sypnex API',
@@ -399,15 +399,12 @@ const sypnexApiMethods = [
 class SypnexCompletionProvider implements vscode.CompletionItemProvider {
 	provideCompletionItems(
 		document: vscode.TextDocument,
-		position: vscode.Position,
-		token: vscode.CancellationToken,
-		context: vscode.CompletionContext
-	): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+		position: vscode.Position
+	): vscode.ProviderResult<vscode.CompletionItem[]> {
 		
-		// Get the line up to the cursor position
-		const linePrefix = document.lineAt(position).text.substr(0, position.character);
+		const linePrefix = document.lineAt(position).text.substring(0, position.character);
 		
-		// Check if we're after 'sypnexAPI.'
+		// Only provide completions after 'sypnexAPI.'
 		if (!linePrefix.endsWith('sypnexAPI.')) {
 			return undefined;
 		}
@@ -416,20 +413,16 @@ class SypnexCompletionProvider implements vscode.CompletionItemProvider {
 		const completionItems = sypnexApiMethods.map(method => {
 			const item = new vscode.CompletionItem(method.name, vscode.CompletionItemKind.Method);
 			
-			// Set the detail (signature) and description
+			// Set method signature as detail
 			item.detail = method.signature;
 			item.documentation = new vscode.MarkdownString(method.description);
 			
-			// Set insert text with parentheses
-			if (method.isAsync) {
-				item.insertText = `${method.name}($0)`;
-				item.documentation.appendMarkdown('\n\n**Returns:** Promise');
-			} else {
-				item.insertText = `${method.name}($0)`;
-			}
+			// Set insert text with parentheses and cursor positioning
+			item.insertText = new vscode.SnippetString(`${method.name}($0)`);
 			
-			// Enable snippet mode for cursor positioning
-			item.insertText = new vscode.SnippetString(item.insertText as string);
+			if (method.isAsync) {
+				item.documentation.appendMarkdown('\n\n**Returns:** Promise');
+			}
 			
 			return item;
 		});
@@ -438,30 +431,56 @@ class SypnexCompletionProvider implements vscode.CompletionItemProvider {
 	}
 }
 
+// Simple hover provider
+class SypnexHoverProvider implements vscode.HoverProvider {
+	provideHover(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.Hover> {
+		const lineText = document.lineAt(position.line).text;
+		const wordRange = document.getWordRangeAtPosition(position);
+		
+		if (!wordRange) {
+			return;
+		}
+		
+		const word = document.getText(wordRange);
+		
+		// Check if line contains sypnexAPI.methodName
+		if (lineText.includes(`sypnexAPI.${word}`)) {
+			const method = sypnexApiMethods.find(m => m.name === word);
+			
+			if (method) {
+				const markdown = new vscode.MarkdownString();
+				markdown.appendCodeblock(method.signature, 'typescript');
+				markdown.appendMarkdown(`\n\n${method.description}`);
+				
+				return new vscode.Hover(markdown);
+			}
+		}
+	}
+}
+
 // This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Sypnex OS API Support extension is now active!');
 
-	// Register completion provider for JavaScript and TypeScript files
-	const jsProvider = vscode.languages.registerCompletionItemProvider(
-		{ language: 'javascript', scheme: 'file' },
+	// Register completion provider
+	const completionProvider = vscode.languages.registerCompletionItemProvider(
+		['javascript', 'typescript'],
 		new SypnexCompletionProvider(),
-		'.' // Trigger completion after dot
+		'.'
 	);
 
-	const tsProvider = vscode.languages.registerCompletionItemProvider(
-		{ language: 'typescript', scheme: 'file' },
-		new SypnexCompletionProvider(),
-		'.' // Trigger completion after dot
+	// Register hover provider
+	const hoverProvider = vscode.languages.registerHoverProvider(
+		['javascript', 'typescript'],
+		new SypnexHoverProvider()
 	);
 
-	// Register a command for testing
-	const disposable = vscode.commands.registerCommand('sypnex-os-api-support.helloWorld', () => {
+	// Register command
+	const command = vscode.commands.registerCommand('sypnex-os-api-support.helloWorld', () => {
 		vscode.window.showInformationMessage('Sypnex OS API Support is working!');
 	});
 
-	// Add to subscriptions for proper cleanup
-	context.subscriptions.push(jsProvider, tsProvider, disposable);
+	context.subscriptions.push(completionProvider, hoverProvider, command);
 }
 
 // This method is called when your extension is deactivated
