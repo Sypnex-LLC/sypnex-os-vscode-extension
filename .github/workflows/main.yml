@@ -1,0 +1,66 @@
+# .github/workflows/build-extension.yml
+name: Build and Release VS Code Extension
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install vsce (VS Code Extension CLI)
+        run: npm install -g @vscode/vsce
+
+      - name: Build extension
+        run: npm run build-extension
+
+      - name: Get package version
+        id: package_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Sypnex OS API Support v${{ steps.package_version.outputs.VERSION }}"
+          tag_name: "v${{ steps.package_version.outputs.VERSION }}-${{ github.run_number }}"
+          body: |
+            ## Sypnex OS API Support Extension v${{ steps.package_version.outputs.VERSION }}
+            
+            ### Installation Instructions:
+            1. Download the `.vsix` file below
+            2. Open VS Code
+            3. Press `Ctrl+Shift+P` → "Extensions: Install from VSIX"
+            4. Select the downloaded file
+            5. Restart VS Code
+            
+            ### What's Included:
+            - Auto-generated from latest Sypnex API
+            - IntelliSense support for `sypnexAPI.*` methods
+            - Hover documentation for all API methods
+            
+            **Build #${{ github.run_number }}** - Auto-generated from commit ${{ github.sha }}
+          files: "*.vsix"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
