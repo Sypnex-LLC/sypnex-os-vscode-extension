@@ -7,7 +7,7 @@ VS Code extension that provides IntelliSense and autocomplete support for the Sy
 ## Quick Start
 
 ### 1. Install VS Code Extension
-1. Download the latest `.vsix` file from [Releases](../../releases)
+1. Download the latest `.vsix` file from [Releases](https://github.com/Sypnex-LLC/sypnex-os-vscode-extension/releases)
 2. Open VS Code → `Ctrl+Shift+P` → "Extensions: Install from VSIX"
 3. Select the downloaded file and restart VS Code
 
