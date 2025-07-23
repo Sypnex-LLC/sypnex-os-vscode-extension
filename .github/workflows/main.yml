@@ -59,8 +59,8 @@ jobs:
             - Hover documentation for all API methods
             
             **Build #${{ github.run_number }}** - Auto-generated from commit ${{ github.sha }}
-          files: "*.vsix"
-          draft: false
-          prerelease: false
+            files: |
+              *.vsix
+              sypnex-api-docs.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
