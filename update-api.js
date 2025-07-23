@@ -204,6 +204,83 @@ function updateExtensionFile(newMethodsCode) {
     fs.writeFileSync(EXTENSION_FILE_PATH, updatedContent, 'utf8');
 }
 
+function generateAPIDocumentation(methods) {
+    let markdown = `# Sypnex API Documentation
+
+## Overview
+The Sypnex API is globally available as \`sypnexAPI\` in all applications running in the Sypnex OS environment.
+
+## Usage
+Simply use \`sypnexAPI.methodName()\` - no imports or instantiation needed.
+
+## Available Methods
+
+`;
+
+    methods.forEach(method => {
+        const asyncKeyword = method.isAsync ? 'await ' : '';
+        const returnType = method.isAsync ? 'Promise' : 'any';
+        
+        markdown += `### \`${method.name}(${method.params})\`
+- **Description:** ${method.description}
+- **Returns:** ${returnType}
+- **Usage:** \`${asyncKeyword}sypnexAPI.${method.name}(${method.params})\`
+
+`;
+
+        if (method.jsdoc) {
+            // Extract @param and @returns from JSDoc if available
+            const paramMatches = method.jsdoc.match(/@param\s+\{[^}]+\}\s+\w+\s+[^\n]+/g);
+            if (paramMatches) {
+                markdown += `**Parameters:**\n`;
+                paramMatches.forEach(param => {
+                    markdown += `- ${param.replace('@param', '')}\n`;
+                });
+                markdown += '\n';
+            }
+        }
+    });
+
+    markdown += `
+## Example Usage
+
+\`\`\`javascript
+// Initialize the API (if needed)
+await sypnexAPI.init();
+
+// Get app settings
+const setting = await sypnexAPI.getSetting('theme', 'dark');
+
+// Work with virtual files
+const files = await sypnexAPI.listVirtualFiles('/');
+const content = await sypnexAPI.readVirtualFileText('/config.json');
+
+// Show notifications
+sypnexAPI.showNotification('Hello from your app!', 'info');
+
+// Logging
+await sypnexAPI.logInfo('Application started');
+await sypnexAPI.logError('Something went wrong', { error: 'details' });
+
+// Terminal commands
+const result = await sypnexAPI.executeTerminalCommand('ls -la');
+\`\`\`
+
+## Notes for AI Assistants
+- All methods are available on the global \`sypnexAPI\` object
+- Async methods should be awaited
+- No imports or instantiation required
+- API is automatically available in Sypnex OS applications
+`;
+
+    return markdown;
+}
+
+function generateDocumentationFile(methods) {
+    const documentation = generateAPIDocumentation(methods);
+    fs.writeFileSync('./sypnex-api-docs.md', documentation, 'utf8');
+}
+
 function main() {
     try {
         console.log('🔍 Reading Sypnex API file...');
@@ -231,7 +308,11 @@ function main() {
         console.log('📝 Updating extension.ts...');
         updateExtensionFile(newMethodsCode);
         
+        console.log('📖 Generating API documentation...');
+        generateDocumentationFile(methods);
+        
         console.log('✅ Extension updated successfully!');
+        console.log('✅ Documentation generated: sypnex-api-docs.md');
         console.log('💡 Run "npm run compile && vsce package" to rebuild the extension');
         
     } catch (error) {
