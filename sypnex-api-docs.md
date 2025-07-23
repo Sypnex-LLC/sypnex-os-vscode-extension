@@ -41,6 +41,11 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 **Parameters:**
 -  {object} state - Window state object to save
 
+### `refreshAppVersionsCache()`
+- **Description:** Request the OS to refresh the latest app versions cache
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.refreshAppVersionsCache()`
+
 ### `getSetting(key, defaultValue = null)`
 - **Description:** Get an application setting
 - **Returns:** Promise

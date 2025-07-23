@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-07-22 09:42:27.531552
+// Generated: 2025-07-23 00:57:34.577468
 
 // === sypnex-api-core.js ===
 // SypnexAPI Core - Main class and initialization
@@ -187,6 +187,36 @@ class SypnexAPI {
             }
         } catch (error) {
             console.error('SypnexAPI: Error saving window state:', error);
+            return false;
+        }
+    }
+
+    /**
+     * Request the OS to refresh the latest app versions cache
+     * Useful when an app knows it has been updated or wants to force a cache refresh
+     * @async
+     * @returns {Promise<boolean>} True if refresh was successful, false otherwise
+     */
+    async refreshAppVersionsCache() {
+        try {
+            // Call the global OS method if available
+            if (typeof window !== 'undefined' && window.sypnexOS && window.sypnexOS.refreshLatestVersionsCache) {
+                console.log(`SypnexAPI [${this.appId}]: Requesting app versions cache refresh...`);
+                const result = await window.sypnexOS.refreshLatestVersionsCache();
+                
+                if (result) {
+                    console.log(`SypnexAPI [${this.appId}]: App versions cache refreshed successfully`);
+                    return true;
+                } else {
+                    console.warn(`SypnexAPI [${this.appId}]: App versions cache refresh failed`);
+                    return false;
+                }
+            } else {
+                console.warn(`SypnexAPI [${this.appId}]: OS cache refresh not available - running outside OS environment`);
+                return false;
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error refreshing app versions cache:`, error);
             return false;
         }
     }

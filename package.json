@@ -3,7 +3,11 @@
   "displayName": "Sypnex OS API Support",
   "description": "IntelliSense and autocomplete support for Sypnex OS API in JavaScript projects",
   "version": "0.0.1",
-  	"publisher": "sypnex-team",
+  "publisher": "sypnex-team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sypnex-LLC/sypnex-os-vscode-extension.git"
+  },
   "engines": {
     "vscode": "^1.102.0"
   },

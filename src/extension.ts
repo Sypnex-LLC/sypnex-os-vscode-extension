@@ -41,6 +41,12 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'refreshAppVersionsCache',
+		signature: 'refreshAppVersionsCache(): Promise<any>',
+		description: 'Request the OS to refresh the latest app versions cache',
+		isAsync: true
+	},
+	{
 		name: 'getSetting',
 		signature: 'getSetting(key: any, defaultValue?: any): Promise<any>',
 		description: 'Get an application setting',
