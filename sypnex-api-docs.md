@@ -73,6 +73,65 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {string} title - Modal title
 -  {string} message - Modal message/label
 
+### `detectAppScale()`
+- **Description:** Scaling utilities for handling app scaling across all user applications
+- **Returns:** any
+- **Usage:** `sypnexAPI.detectAppScale()`
+
+### `getEffectiveScale(zoomScale = 1.0)`
+- **Description:** Get the total effective scale (app scale × optional zoom scale)
+- **Returns:** any
+- **Usage:** `sypnexAPI.getEffectiveScale(zoomScale = 1.0)`
+
+### `screenToAppCoords(screenX, screenY, zoomScale = 1.0)`
+- **Description:** Convert screen coordinates to app coordinates (accounting for app scale and optional zoom)
+- **Returns:** any
+- **Usage:** `sypnexAPI.screenToAppCoords(screenX, screenY, zoomScale = 1.0)`
+
+**Parameters:**
+-  {number} screenX - Screen X coordinate
+-  {number} screenY - Screen Y coordinate
+
+### `appToScreenCoords(appX, appY, zoomScale = 1.0)`
+- **Description:** Convert app coordinates to screen coordinates (accounting for app scale and optional zoom)
+- **Returns:** any
+- **Usage:** `sypnexAPI.appToScreenCoords(appX, appY, zoomScale = 1.0)`
+
+**Parameters:**
+-  {number} appX - App X coordinate
+-  {number} appY - App Y coordinate
+
+### `getScaledBoundingClientRect(element)`
+- **Description:** Get scaled element bounding rectangle (compensates for app scaling)
+- **Returns:** any
+- **Usage:** `sypnexAPI.getScaledBoundingClientRect(element)`
+
+**Parameters:**
+-  {Element} element - DOM element to get bounds for
+
+### `getScaledMouseCoords(e)`
+- **Description:** Get scaled mouse coordinates from event (compensates for app scaling only)
+- **Returns:** any
+- **Usage:** `sypnexAPI.getScaledMouseCoords(e)`
+
+**Parameters:**
+-  {Event} e - Mouse event
+
+### `initScaleDetection(onScaleChange = null)`
+- **Description:** Initialize scale detection with optional change callback
+- **Returns:** any
+- **Usage:** `sypnexAPI.initScaleDetection(onScaleChange = null)`
+
+### `getCurrentScale()`
+- **Description:** Get current cached app scale (without re-detection)
+- **Returns:** any
+- **Usage:** `sypnexAPI.getCurrentScale()`
+
+### `refreshScale()`
+- **Description:** Force refresh of scale detection
+- **Returns:** any
+- **Usage:** `sypnexAPI.refreshScale()`
+
 ### `getSetting(key, defaultValue = null)`
 - **Description:** Get an application setting
 - **Returns:** Promise
@@ -385,14 +444,11 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {object} options - Loading options
 
 ### `showFileExplorer(options = {})`
-- **Description:** Detect the current app scale from CSS transform
+- **Description:** Show a file explorer modal for selecting files or directories
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.showFileExplorer(options = {})`
 
 **Parameters:**
--  {number} screenX - Screen X coordinate
--  {number} screenY - Screen Y coordinate
--  {Element} element - DOM element to get bounds for
 -  {object} options - Configuration options
 
 ### `executeTerminalCommand(command)`
@@ -566,20 +622,10 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 **Parameters:**
 -  {string} url - Target URL
 
-### `detectAppScale()`
-- **Description:** detectAppScale method from Sypnex API
+### `scaling()`
+- **Description:** scaling method from Sypnex API
 - **Returns:** any
-- **Usage:** `sypnexAPI.detectAppScale()`
-
-### `screenToAppCoords(screenX, screenY)`
-- **Description:** screenToAppCoords method from Sypnex API
-- **Returns:** any
-- **Usage:** `sypnexAPI.screenToAppCoords(screenX, screenY)`
-
-### `getScaledBoundingClientRect(element)`
-- **Description:** getScaledBoundingClientRect method from Sypnex API
-- **Returns:** any
-- **Usage:** `sypnexAPI.getScaledBoundingClientRect(element)`
+- **Usage:** `sypnexAPI.scaling()`
 
 ### `media(max-width: 768px)`
 - **Description:** media method from Sypnex API

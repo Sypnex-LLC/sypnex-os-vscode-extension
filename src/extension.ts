@@ -65,6 +65,60 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'detectAppScale',
+		signature: 'detectAppScale(): any',
+		description: 'Scaling utilities for handling app scaling across all user applications',
+		isAsync: false
+	},
+	{
+		name: 'getEffectiveScale',
+		signature: 'getEffectiveScale(zoomScale?: any): any',
+		description: 'Get the total effective scale (app scale × optional zoom scale)',
+		isAsync: false
+	},
+	{
+		name: 'screenToAppCoords',
+		signature: 'screenToAppCoords(screenX: any, screenY: any, zoomScale?: any): any',
+		description: 'Convert screen coordinates to app coordinates (accounting for app scale and optional zoom)',
+		isAsync: false
+	},
+	{
+		name: 'appToScreenCoords',
+		signature: 'appToScreenCoords(appX: any, appY: any, zoomScale?: any): any',
+		description: 'Convert app coordinates to screen coordinates (accounting for app scale and optional zoom)',
+		isAsync: false
+	},
+	{
+		name: 'getScaledBoundingClientRect',
+		signature: 'getScaledBoundingClientRect(element: any): any',
+		description: 'Get scaled element bounding rectangle (compensates for app scaling)',
+		isAsync: false
+	},
+	{
+		name: 'getScaledMouseCoords',
+		signature: 'getScaledMouseCoords(e: any): any',
+		description: 'Get scaled mouse coordinates from event (compensates for app scaling only)',
+		isAsync: false
+	},
+	{
+		name: 'initScaleDetection',
+		signature: 'initScaleDetection(onScaleChange?: any): any',
+		description: 'Initialize scale detection with optional change callback',
+		isAsync: false
+	},
+	{
+		name: 'getCurrentScale',
+		signature: 'getCurrentScale(): any',
+		description: 'Get current cached app scale (without re-detection)',
+		isAsync: false
+	},
+	{
+		name: 'refreshScale',
+		signature: 'refreshScale(): any',
+		description: 'Force refresh of scale detection',
+		isAsync: false
+	},
+	{
 		name: 'getSetting',
 		signature: 'getSetting(key: any, defaultValue?: any): Promise<any>',
 		description: 'Get an application setting',
@@ -313,7 +367,7 @@ const sypnexApiMethods = [
 	{
 		name: 'showFileExplorer',
 		signature: 'showFileExplorer(options?: any): Promise<any>',
-		description: 'Detect the current app scale from CSS transform',
+		description: 'Show a file explorer modal for selecting files or directories',
 		isAsync: true
 	},
 	{
@@ -461,21 +515,9 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
-		name: 'detectAppScale',
-		signature: 'detectAppScale(): any',
-		description: 'detectAppScale method from Sypnex API',
-		isAsync: false
-	},
-	{
-		name: 'screenToAppCoords',
-		signature: 'screenToAppCoords(screenX: any, screenY: any): any',
-		description: 'screenToAppCoords method from Sypnex API',
-		isAsync: false
-	},
-	{
-		name: 'getScaledBoundingClientRect',
-		signature: 'getScaledBoundingClientRect(element: any): any',
-		description: 'getScaledBoundingClientRect method from Sypnex API',
+		name: 'scaling',
+		signature: 'scaling(): any',
+		description: 'scaling method from Sypnex API',
 		isAsync: false
 	},
 	{
