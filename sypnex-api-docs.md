@@ -46,6 +46,33 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.refreshAppVersionsCache()`
 
+### `showConfirmation(title, message, options = {})`
+- **Description:** Show a confirmation dialog with standard OS styling
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.showConfirmation(title, message, options = {})`
+
+**Parameters:**
+-  {string} title - Dialog title
+-  {string} message - Dialog message
+
+### `showInputModal(title, message, options = {})`
+- **Description:** Show an input modal for getting text input from user
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.showInputModal(title, message, options = {})`
+
+**Parameters:**
+-  {string} title - Modal title
+-  {string} message - Modal message/label
+
+### `showFileUploadModal(title, message, options = {})`
+- **Description:** Show a file upload modal
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.showFileUploadModal(title, message, options = {})`
+
+**Parameters:**
+-  {string} title - Modal title
+-  {string} message - Modal message/label
+
 ### `getSetting(key, defaultValue = null)`
 - **Description:** Get an application setting
 - **Returns:** Promise
@@ -449,6 +476,96 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.getMyLogs(filters = {})`
 
+### `getAvailableApps()`
+- **Description:** Get available applications from the registry
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.getAvailableApps()`
+
+### `getInstalledApps()`
+- **Description:** Get list of installed applications
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.getInstalledApps()`
+
+### `updateApp(appId, downloadUrl)`
+- **Description:** Update a specific application to the latest version
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.updateApp(appId, downloadUrl)`
+
+**Parameters:**
+-  {string} appId - Application ID to update
+-  {string} downloadUrl - Download URL for the app update (required)
+
+### `refreshAppRegistry()`
+- **Description:** Refresh the application registry cache
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.refreshAppRegistry()`
+
+### `installApp(appId, options = {})`
+- **Description:** Install an application from the registry
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.installApp(appId, options = {})`
+
+**Parameters:**
+-  {string} appId - Application ID to install
+
+### `uninstallApp(appId)`
+- **Description:** Uninstall an application
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.uninstallApp(appId)`
+
+**Parameters:**
+-  {string} appId - Application ID to uninstall
+
+### `proxyHTTP(options)`
+- **Description:** Proxy an HTTP request through the system
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyHTTP(options)`
+
+**Parameters:**
+-  {object} options - HTTP request options
+
+### `proxyGET(url, options = {})`
+- **Description:** Make a GET request through the proxy
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyGET(url, options = {})`
+
+**Parameters:**
+-  {string} url - Target URL
+
+### `proxyPOST(url, body, options = {})`
+- **Description:** Make a POST request through the proxy
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyPOST(url, body, options = {})`
+
+**Parameters:**
+-  {string} url - Target URL
+-  {*} body - Request body
+
+### `proxyPUT(url, body, options = {})`
+- **Description:** Make a PUT request through the proxy
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyPUT(url, body, options = {})`
+
+**Parameters:**
+-  {string} url - Target URL
+-  {*} body - Request body
+
+### `proxyDELETE(url, options = {})`
+- **Description:** Make a DELETE request through the proxy
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyDELETE(url, options = {})`
+
+**Parameters:**
+-  {string} url - Target URL
+
+### `proxyJSON(url, options = {})`
+- **Description:** Make a JSON API request through the proxy
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.proxyJSON(url, options = {})`
+
+**Parameters:**
+-  {string} url - Target URL
+
 ### `detectAppScale()`
 - **Description:** detectAppScale method from Sypnex API
 - **Returns:** any
@@ -464,10 +581,15 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Returns:** any
 - **Usage:** `sypnexAPI.getScaledBoundingClientRect(element)`
 
-### `loadDirectory(path)`
+### `media(max-width: 768px)`
+- **Description:** media method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.media(max-width: 768px)`
+
+### `loadDirectory(path, isRefresh = false)`
 - **Description:** loadDirectory method from Sypnex API
 - **Returns:** any
-- **Usage:** `sypnexAPI.loadDirectory(path)`
+- **Usage:** `sypnexAPI.loadDirectory(path, isRefresh = false)`
 
 ### `updateBreadcrumb(path)`
 - **Description:** updateBreadcrumb method from Sypnex API

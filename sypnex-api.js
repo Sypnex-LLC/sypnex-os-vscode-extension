@@ -1,5 +1,6 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-07-23 00:57:34.577468
+// Generated: 2025-07-25 01:29:41.952025
+// Minified: False
 
 // === sypnex-api-core.js ===
 // SypnexAPI Core - Main class and initialization
@@ -43,7 +44,6 @@ class SypnexAPI {
             // Check if we have the required helper functions
             if (typeof this.getAppSetting === 'function' && typeof this.getAllAppSettings === 'function') {
                 this.initialized = true;
-                console.log(`SypnexAPI initialized for app: ${this.appId}`);
             } else {
                 console.warn('SypnexAPI: Running outside OS environment, some features may not work');
             }
@@ -102,7 +102,6 @@ class SypnexAPI {
      * @param {string} [type='info'] - Notification type (info, error, warn, etc.)
      */
     _defaultShowNotification(message, type = 'info') {
-        console.log(`[${type.toUpperCase()}] ${message}`);
         if (type === 'error') {
             console.error(message);
         }
@@ -179,7 +178,6 @@ class SypnexAPI {
             });
             
             if (response.ok) {
-                console.log('SypnexAPI: Window state saved successfully');
                 return true;
             } else {
                 console.error('SypnexAPI: Failed to save window state');
@@ -201,11 +199,9 @@ class SypnexAPI {
         try {
             // Call the global OS method if available
             if (typeof window !== 'undefined' && window.sypnexOS && window.sypnexOS.refreshLatestVersionsCache) {
-                console.log(`SypnexAPI [${this.appId}]: Requesting app versions cache refresh...`);
                 const result = await window.sypnexOS.refreshLatestVersionsCache();
                 
                 if (result) {
-                    console.log(`SypnexAPI [${this.appId}]: App versions cache refreshed successfully`);
                     return true;
                 } else {
                     console.warn(`SypnexAPI [${this.appId}]: App versions cache refresh failed`);
@@ -219,6 +215,704 @@ class SypnexAPI {
             console.error(`SypnexAPI [${this.appId}]: Error refreshing app versions cache:`, error);
             return false;
         }
+    }
+
+    /**
+     * Show a confirmation dialog with standard OS styling
+     * @async
+     * @param {string} title - Dialog title
+     * @param {string} message - Dialog message
+     * @param {object} [options={}] - Configuration options
+     * @param {string} [options.confirmText='Yes'] - Text for confirm button
+     * @param {string} [options.cancelText='No'] - Text for cancel button
+     * @param {string} [options.type='warning'] - Dialog type: 'warning', 'danger', 'info'
+     * @param {string} [options.icon='fas fa-exclamation-triangle'] - FontAwesome icon class
+     * @returns {Promise<boolean>} True if confirmed, false if cancelled
+     */
+    async showConfirmation(title, message, options = {}) {
+        const {
+            confirmText = 'Yes',
+            cancelText = 'No',
+            type = 'warning',
+            icon = 'fas fa-exclamation-triangle'
+        } = options;
+
+        return new Promise((resolve) => {
+            // Remove any existing confirmation modal
+            const existingModal = document.getElementById('sypnex-confirmation-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Create the modal with proper OS styling
+            const modal = document.createElement('div');
+            modal.id = 'sypnex-confirmation-modal';
+            modal.style.cssText = `
+                display: block;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            `;
+            
+            // Create modal content with proper structure
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background-color: var(--glass-bg);
+                margin: 5% auto;
+                padding: 0;
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                width: 90%;
+                max-width: 500px;
+                backdrop-filter: blur(10px);
+            `;
+            
+            // Modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid var(--glass-border);
+            `;
+            
+            const headerTitle = document.createElement('h3');
+            headerTitle.style.cssText = `
+                margin: 0;
+                color: var(--text-primary);
+            `;
+            headerTitle.innerHTML = `<i class="${icon}"></i> ${title}`;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = `
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--text-secondary);
+            `;
+            closeBtn.onmouseover = () => closeBtn.style.color = 'var(--text-primary)';
+            closeBtn.onmouseout = () => closeBtn.style.color = 'var(--text-secondary)';
+            
+            modalHeader.appendChild(headerTitle);
+            modalHeader.appendChild(closeBtn);
+            
+            // Modal body
+            const modalBody = document.createElement('div');
+            modalBody.style.cssText = `padding: 20px;`;
+            
+            const messageP = document.createElement('p');
+            messageP.style.cssText = `
+                color: var(--text-primary);
+                margin: 0 0 15px 0;
+                line-height: 1.5;
+            `;
+            messageP.textContent = message;
+            modalBody.appendChild(messageP);
+            
+            // Add warning text for danger type
+            if (type === 'danger') {
+                const warningP = document.createElement('p');
+                warningP.style.cssText = `
+                    color: var(--danger-color, #ff4444);
+                    margin: 10px 0 0 0;
+                    font-size: 14px;
+                    font-style: italic;
+                `;
+                warningP.textContent = 'This action cannot be undone.';
+                modalBody.appendChild(warningP);
+            }
+            
+            // Modal footer
+            const modalFooter = document.createElement('div');
+            modalFooter.style.cssText = `
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                padding: 20px;
+                border-top: 1px solid var(--glass-border);
+            `;
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = cancelText;
+            cancelBtn.className = 'app-btn secondary';
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = confirmText;
+            confirmBtn.className = `app-btn ${type === 'danger' ? 'danger' : 'primary'}`;
+            
+            modalFooter.appendChild(cancelBtn);
+            modalFooter.appendChild(confirmBtn);
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modalContent.appendChild(modalFooter);
+            modal.appendChild(modalContent);
+            
+            // Add to document
+            document.body.appendChild(modal);
+
+            // Setup event handlers
+            const closeModal = (confirmed) => {
+                modal.remove();
+                resolve(confirmed);
+                document.removeEventListener('keydown', escapeHandler);
+            };
+
+            // Event listeners
+            closeBtn.addEventListener('click', () => closeModal(false));
+            cancelBtn.addEventListener('click', () => closeModal(false));
+            confirmBtn.addEventListener('click', () => closeModal(true));
+
+            // Escape key to close
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeModal(false);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        });
+    }
+
+    /**
+     * Show an input modal for getting text input from user
+     * @param {string} title - Modal title
+     * @param {string} message - Modal message/label
+     * @param {object} [options={}] - Configuration options
+     * @param {string} [options.placeholder=''] - Input placeholder text
+     * @param {string} [options.defaultValue=''] - Default input value
+     * @param {string} [options.confirmText='Create'] - Text for confirm button
+     * @param {string} [options.cancelText='Cancel'] - Text for cancel button
+     * @param {string} [options.icon='fas fa-edit'] - FontAwesome icon class
+     * @param {string} [options.inputType='text'] - Input type: 'text', 'textarea'
+     * @returns {Promise<string|null>} Input value if confirmed, null if cancelled
+     */
+    async showInputModal(title, message, options = {}) {
+        const {
+            placeholder = '',
+            defaultValue = '',
+            confirmText = 'Create',
+            cancelText = 'Cancel',
+            icon = 'fas fa-edit',
+            inputType = 'text'
+        } = options;
+
+        return new Promise((resolve) => {
+            // Remove any existing modal
+            const existingModal = document.getElementById('sypnex-input-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Create the modal
+            const modal = document.createElement('div');
+            modal.id = 'sypnex-input-modal';
+            modal.style.cssText = `
+                display: block;
+                position: fixed;
+                z-index: 11000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+            `;
+            
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: var(--glass-bg);
+                margin: 5% auto;
+                padding: 0;
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                width: 90%;
+                max-width: 500px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            `;
+            
+            // Modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid var(--glass-border);
+                background: var(--glass-bg);
+                border-radius: 12px 12px 0 0;
+            `;
+            
+            const headerTitle = document.createElement('h3');
+            headerTitle.style.cssText = `
+                margin: 0;
+                color: var(--text-primary);
+                font-size: 1.2em;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            headerTitle.innerHTML = `<i class="${icon}" style="color: var(--accent-color);"></i> ${title}`;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = `
+                background: none;
+                border: none;
+                font-size: 1.5em;
+                color: var(--text-secondary);
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: all 0.2s ease;
+            `;
+            closeBtn.onmouseover = () => {
+                closeBtn.style.background = 'rgba(255, 71, 87, 0.1)';
+                closeBtn.style.color = '#ff4757';
+                closeBtn.style.transform = 'scale(1.1)';
+            };
+            closeBtn.onmouseout = () => {
+                closeBtn.style.background = 'none';
+                closeBtn.style.color = 'var(--text-secondary)';
+                closeBtn.style.transform = 'scale(1)';
+            };
+            
+            modalHeader.appendChild(headerTitle);
+            modalHeader.appendChild(closeBtn);
+            
+            // Modal body
+            const modalBody = document.createElement('div');
+            modalBody.style.cssText = `
+                padding: 20px;
+                background: var(--glass-bg);
+            `;
+            
+            const label = document.createElement('label');
+            label.style.cssText = `
+                display: block;
+                margin-bottom: 5px;
+                color: var(--text-primary);
+                font-weight: bold;
+                font-size: 14px;
+            `;
+            label.textContent = message;
+            
+            let input;
+            if (inputType === 'textarea') {
+                input = document.createElement('textarea');
+                input.style.cssText = `
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid var(--glass-border);
+                    border-radius: 6px;
+                    background: rgba(20, 20, 20, 0.8);
+                    color: var(--text-primary);
+                    font-family: inherit;
+                    font-size: 14px;
+                    resize: vertical;
+                    min-height: 120px;
+                    box-sizing: border-box;
+                `;
+            } else {
+                input = document.createElement('input');
+                input.type = 'text';
+                input.style.cssText = `
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid var(--glass-border);
+                    border-radius: 6px;
+                    background: rgba(20, 20, 20, 0.8);
+                    color: var(--text-primary);
+                    font-family: inherit;
+                    font-size: 14px;
+                    box-sizing: border-box;
+                `;
+            }
+            
+            input.placeholder = placeholder;
+            input.value = defaultValue;
+            
+            input.onfocus = () => {
+                input.style.borderColor = 'var(--accent-color)';
+                input.style.boxShadow = '0 0 0 2px rgba(0, 212, 255, 0.2)';
+            };
+            input.onblur = () => {
+                input.style.borderColor = 'var(--glass-border)';
+                input.style.boxShadow = 'none';
+            };
+            
+            modalBody.appendChild(label);
+            modalBody.appendChild(input);
+            
+            // Modal footer
+            const modalFooter = document.createElement('div');
+            modalFooter.style.cssText = `
+                padding: 20px;
+                border-top: 1px solid var(--glass-border);
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                background: var(--glass-bg);
+                border-radius: 0 0 12px 12px;
+            `;
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = cancelText;
+            cancelBtn.className = 'app-btn secondary';
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = confirmText;
+            confirmBtn.className = 'app-btn primary';
+            
+            modalFooter.appendChild(cancelBtn);
+            modalFooter.appendChild(confirmBtn);
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modalContent.appendChild(modalFooter);
+            modal.appendChild(modalContent);
+            
+            // Add to document
+            document.body.appendChild(modal);
+            
+            // Focus the input
+            setTimeout(() => input.focus(), 100);
+
+            // Setup event handlers
+            const closeModal = (inputValue) => {
+                modal.remove();
+                resolve(inputValue);
+                document.removeEventListener('keydown', escapeHandler);
+            };
+
+            // Event listeners
+            closeBtn.addEventListener('click', () => closeModal(null));
+            cancelBtn.addEventListener('click', () => closeModal(null));
+            confirmBtn.addEventListener('click', () => {
+                const value = input.value.trim();
+                if (value) {
+                    closeModal(value);
+                }
+            });
+
+            // Enter key to confirm
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && (inputType !== 'textarea' || e.ctrlKey)) {
+                    e.preventDefault();
+                    const value = input.value.trim();
+                    if (value) {
+                        closeModal(value);
+                    }
+                }
+            });
+
+            // Escape key to close
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeModal(null);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        });
+    }
+
+    /**
+     * Show a file upload modal
+     * @param {string} title - Modal title
+     * @param {string} message - Modal message/label
+     * @param {object} [options={}] - Configuration options
+     * @param {string} [options.confirmText='Upload'] - Text for confirm button
+     * @param {string} [options.cancelText='Cancel'] - Text for cancel button
+     * @param {string} [options.icon='fas fa-upload'] - FontAwesome icon class
+     * @param {string} [options.accept='*'] - File accept types
+     * @returns {Promise<File|null>} Selected file if confirmed, null if cancelled
+     */
+    async showFileUploadModal(title, message, options = {}) {
+        const {
+            confirmText = 'Upload',
+            cancelText = 'Cancel',
+            icon = 'fas fa-upload',
+            accept = '*'
+        } = options;
+
+        return new Promise((resolve) => {
+            // Remove any existing modal
+            const existingModal = document.getElementById('sypnex-upload-modal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Create the modal
+            const modal = document.createElement('div');
+            modal.id = 'sypnex-upload-modal';
+            modal.style.cssText = `
+                display: block;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+            `;
+            
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: var(--glass-bg);
+                margin: 5% auto;
+                padding: 0;
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                width: 90%;
+                max-width: 500px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            `;
+            
+            // Modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = `
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid var(--glass-border);
+                background: var(--glass-bg);
+                border-radius: 12px 12px 0 0;
+            `;
+            
+            const headerTitle = document.createElement('h3');
+            headerTitle.style.cssText = `
+                margin: 0;
+                color: var(--text-primary);
+                font-size: 1.2em;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            headerTitle.innerHTML = `<i class="${icon}" style="color: var(--accent-color);"></i> ${title}`;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = `
+                background: none;
+                border: none;
+                font-size: 1.5em;
+                color: var(--text-secondary);
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: all 0.2s ease;
+            `;
+            closeBtn.onmouseover = () => {
+                closeBtn.style.background = 'rgba(255, 71, 87, 0.1)';
+                closeBtn.style.color = '#ff4757';
+                closeBtn.style.transform = 'scale(1.1)';
+            };
+            closeBtn.onmouseout = () => {
+                closeBtn.style.background = 'none';
+                closeBtn.style.color = 'var(--text-secondary)';
+                closeBtn.style.transform = 'scale(1)';
+            };
+            
+            modalHeader.appendChild(headerTitle);
+            modalHeader.appendChild(closeBtn);
+            
+            // Modal body
+            const modalBody = document.createElement('div');
+            modalBody.style.cssText = `
+                padding: 20px;
+                background: var(--glass-bg);
+            `;
+            
+            const label = document.createElement('label');
+            label.style.cssText = `
+                display: block;
+                margin-bottom: 5px;
+                color: var(--text-primary);
+                font-weight: bold;
+                font-size: 14px;
+            `;
+            label.textContent = message;
+            
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = accept;
+            fileInput.style.cssText = `
+                display: none;
+            `;
+            
+            // Custom file input button
+            const customFileBtn = document.createElement('button');
+            customFileBtn.type = 'button';
+            customFileBtn.className = 'app-btn secondary';
+            customFileBtn.style.cssText = `
+                width: 100%;
+                padding: 12px;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                border: 2px dashed var(--glass-border);
+                background: rgba(0, 212, 255, 0.05);
+                transition: all 0.3s ease;
+            `;
+            customFileBtn.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Choose File to Upload</span>
+            `;
+            
+            customFileBtn.onmouseover = () => {
+                customFileBtn.style.borderColor = 'var(--accent-color)';
+                customFileBtn.style.background = 'rgba(0, 212, 255, 0.1)';
+                customFileBtn.style.transform = 'translateY(-1px)';
+            };
+            customFileBtn.onmouseout = () => {
+                customFileBtn.style.borderColor = 'var(--glass-border)';
+                customFileBtn.style.background = 'rgba(0, 212, 255, 0.05)';
+                customFileBtn.style.transform = 'translateY(0)';
+            };
+            
+            // Click handler for custom button
+            customFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // File info display
+            const fileInfo = document.createElement('div');
+            fileInfo.style.cssText = `
+                display: none;
+                background: rgba(0, 212, 255, 0.1);
+                border: 1px solid rgba(0, 212, 255, 0.3);
+                border-radius: 6px;
+                padding: 10px;
+                margin-top: 10px;
+            `;
+            
+            modalBody.appendChild(label);
+            modalBody.appendChild(customFileBtn);
+            modalBody.appendChild(fileInput);
+            modalBody.appendChild(fileInfo);
+            
+            // Modal footer
+            const modalFooter = document.createElement('div');
+            modalFooter.style.cssText = `
+                padding: 20px;
+                border-top: 1px solid var(--glass-border);
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                background: var(--glass-bg);
+                border-radius: 0 0 12px 12px;
+            `;
+            
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = cancelText;
+            cancelBtn.className = 'app-btn secondary';
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.textContent = confirmText;
+            confirmBtn.className = 'app-btn primary';
+            confirmBtn.disabled = true;
+            
+            modalFooter.appendChild(cancelBtn);
+            modalFooter.appendChild(confirmBtn);
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modalContent.appendChild(modalFooter);
+            modal.appendChild(modalContent);
+            
+            // Add to document
+            document.body.appendChild(modal);
+
+            // File selection handler
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    confirmBtn.disabled = false;
+                    
+                    // Update custom button appearance
+                    customFileBtn.innerHTML = `
+                        <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
+                        <span>${file.name}</span>
+                    `;
+                    customFileBtn.style.borderColor = 'var(--accent-color)';
+                    customFileBtn.style.background = 'rgba(0, 212, 255, 0.15)';
+                    
+                    fileInfo.style.display = 'block';
+                    fileInfo.innerHTML = `
+                        <p style="margin: 5px 0; color: var(--text-primary); font-size: 14px;">
+                            <strong style="color: var(--accent-color);">Selected File:</strong> ${file.name}
+                        </p>
+                        <p style="margin: 5px 0; color: var(--text-primary); font-size: 14px;">
+                            <strong style="color: var(--accent-color);">Size:</strong> ${(file.size / 1024).toFixed(1)} KB
+                        </p>
+                    `;
+                } else {
+                    confirmBtn.disabled = true;
+                    
+                    // Reset custom button appearance
+                    customFileBtn.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Choose File to Upload</span>
+                    `;
+                    customFileBtn.style.borderColor = 'var(--glass-border)';
+                    customFileBtn.style.background = 'rgba(0, 212, 255, 0.05)';
+                    
+                    fileInfo.style.display = 'none';
+                }
+            });
+
+            // Setup event handlers
+            const closeModal = (selectedFile) => {
+                modal.remove();
+                resolve(selectedFile);
+                document.removeEventListener('keydown', escapeHandler);
+            };
+
+            // Event listeners
+            closeBtn.addEventListener('click', () => closeModal(null));
+            cancelBtn.addEventListener('click', () => closeModal(null));
+            confirmBtn.addEventListener('click', () => {
+                const file = fileInput.files[0];
+                if (file) {
+                    closeModal(file);
+                }
+            });
+
+            // Escape key to close
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeModal(null);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        });
     }
 }
 
@@ -273,7 +967,6 @@ Object.assign(SypnexAPI.prototype, {
             });
             
             if (response.ok) {
-                console.log(`SypnexAPI: Setting ${key} saved successfully`);
                 return true;
             } else {
                 console.error(`SypnexAPI: Failed to save setting ${key}`);
@@ -312,7 +1005,6 @@ Object.assign(SypnexAPI.prototype, {
             });
             
             if (response.ok) {
-                console.log(`SypnexAPI: Setting ${key} deleted successfully`);
                 return true;
             } else {
                 console.error(`SypnexAPI: Failed to delete setting ${key}`);
@@ -365,7 +1057,6 @@ Object.assign(SypnexAPI.prototype, {
             });
             
             if (response.ok) {
-                console.log(`SypnexAPI: Preference ${category}.${key} saved successfully`);
                 return true;
             } else {
                 console.error(`SypnexAPI: Failed to save preference ${category}.${key}`);
@@ -454,7 +1145,6 @@ Object.assign(SypnexAPI.prototype, {
             // Set up connection event handlers
             this.socket.on('connect', () => {
                 this.socketConnected = true;
-                console.log(`SypnexAPI [${this.appId}]: Socket.IO connected`);
                 this._triggerEvent('socket_connected', { appId: this.appId });
                 
                 // Send app identification message
@@ -469,7 +1159,6 @@ Object.assign(SypnexAPI.prototype, {
             
             this.socket.on('disconnect', (reason) => {
                 this.socketConnected = false;
-                console.log(`SypnexAPI [${this.appId}]: Socket.IO disconnected: ${reason}`);
                 this._triggerEvent('socket_disconnected', { appId: this.appId, reason });
                 
                 // Don't auto-reconnect if it was a manual disconnect
@@ -494,12 +1183,10 @@ Object.assign(SypnexAPI.prototype, {
             
             // Socket.IO reconnection events
             this.socket.on('reconnect_attempt', (attemptNumber) => {
-                console.log(`SypnexAPI [${this.appId}]: Reconnection attempt ${attemptNumber}`);
                 this._triggerEvent('reconnect_attempt', { appId: this.appId, attempt: attemptNumber });
             });
             
             this.socket.on('reconnect', (attemptNumber) => {
-                console.log(`SypnexAPI [${this.appId}]: Reconnected after ${attemptNumber} attempts`);
                 this.socketConnected = true;
                 this.reconnectAttempts = 0;
                 this._triggerEvent('reconnected', { appId: this.appId, attempts: attemptNumber });
@@ -545,7 +1232,6 @@ Object.assign(SypnexAPI.prototype, {
             this.socket = null;
             this.socketConnected = false;
             this.roomsToRejoin.clear(); // Clear rooms to rejoin
-            console.log(`SypnexAPI [${this.appId}]: Socket.IO manually disconnected`);
         }
     },
     
@@ -595,7 +1281,6 @@ Object.assign(SypnexAPI.prototype, {
                 });
             }
             
-            console.log(`SypnexAPI [${this.appId}]: Sent message '${event}' to ${room || 'all'}`);
             return true;
         } catch (error) {
             console.error(`SypnexAPI [${this.appId}]: Error sending message:`, error);
@@ -617,7 +1302,6 @@ Object.assign(SypnexAPI.prototype, {
         try {
             this.socket.emit('join_room', { room: roomName, appId: this.appId });
             this.roomsToRejoin.add(roomName); // Track room for reconnection
-            console.log(`SypnexAPI [${this.appId}]: Joined room '${roomName}'`);
             return true;
         } catch (error) {
             console.error(`SypnexAPI [${this.appId}]: Error joining room:`, error);
@@ -639,7 +1323,6 @@ Object.assign(SypnexAPI.prototype, {
         try {
             this.socket.emit('leave_room', { room: roomName, appId: this.appId });
             this.roomsToRejoin.delete(roomName); // Remove from reconnection tracking
-            console.log(`SypnexAPI [${this.appId}]: Left room '${roomName}'`);
             return true;
         } catch (error) {
             console.error(`SypnexAPI [${this.appId}]: Error leaving room:`, error);
@@ -684,7 +1367,6 @@ Object.assign(SypnexAPI.prototype, {
         
         // Add listener to socket
         this.socket.on(eventName, (data) => {
-            console.log(`SypnexAPI [${this.appId}]: Received event '${eventName}':`, data);
             callback(data);
         });
     },
@@ -773,7 +1455,6 @@ Object.assign(SypnexAPI.prototype, {
             this.performHealthCheck();
         }, this.healthCheckInterval);
         
-        console.log(`SypnexAPI [${this.appId}]: Health checks started (${this.healthCheckInterval}ms interval)`);
     },
     
     /**
@@ -783,7 +1464,6 @@ Object.assign(SypnexAPI.prototype, {
         if (this.healthCheckTimer) {
             clearInterval(this.healthCheckTimer);
             this.healthCheckTimer = null;
-            console.log(`SypnexAPI [${this.appId}]: Health checks stopped`);
         }
     },
     
@@ -792,13 +1472,11 @@ Object.assign(SypnexAPI.prototype, {
      */
     async performHealthCheck() {
         if (!this.isSocketConnected()) {
-            console.log(`SypnexAPI [${this.appId}]: Skipping health check - not connected`);
             return;
         }
         
         try {
             const pingTime = await this.ping();
-            console.log(`SypnexAPI [${this.appId}]: Health check ping: ${pingTime}ms`);
         } catch (error) {
             console.warn(`SypnexAPI [${this.appId}]: Health check failed:`, error.message);
             // If health check fails, it might indicate connection issues
@@ -817,7 +1495,6 @@ Object.assign(SypnexAPI.prototype, {
         } else {
             this.stopHealthChecks();
         }
-        console.log(`SypnexAPI [${this.appId}]: Health checks ${enabled ? 'enabled' : 'disabled'}`);
     },
     
     /**
@@ -830,7 +1507,6 @@ Object.assign(SypnexAPI.prototype, {
             this.stopHealthChecks();
             this.startHealthChecks();
         }
-        console.log(`SypnexAPI [${this.appId}]: Health check interval set to ${intervalMs}ms`);
     },
     
     // ===== AUTO-RECONNECT HELPER METHODS =====
@@ -844,7 +1520,6 @@ Object.assign(SypnexAPI.prototype, {
         if (this.socket) {
             this.socket.io.reconnection(enabled);
         }
-        console.log(`SypnexAPI [${this.appId}]: Auto-reconnect ${enabled ? 'enabled' : 'disabled'}`);
     },
     
     /**
@@ -868,11 +1543,6 @@ Object.assign(SypnexAPI.prototype, {
             this.socket.io.reconnectionDelayMax(this.maxReconnectDelay);
         }
         
-        console.log(`SypnexAPI [${this.appId}]: Reconnect config updated:`, {
-            maxAttempts: this.maxReconnectAttempts,
-            delay: this.reconnectDelay,
-            maxDelay: this.maxReconnectDelay
-        });
     },
     
     /**
@@ -882,7 +1552,6 @@ Object.assign(SypnexAPI.prototype, {
         if (this.socket) {
             this.manualDisconnect = false; // Reset manual disconnect flag
             this.socket.connect();
-            console.log(`SypnexAPI [${this.appId}]: Manual reconnection triggered`);
         }
     },
     
@@ -899,7 +1568,6 @@ Object.assign(SypnexAPI.prototype, {
         this.reconnectAttempts++;
         const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), this.maxReconnectDelay);
         
-        console.log(`SypnexAPI [${this.appId}]: Scheduling reconnection attempt ${this.reconnectAttempts} in ${delay}ms`);
         
         this.reconnectTimer = setTimeout(() => {
             if (this.socket && !this.socket.connected && !this.manualDisconnect) {
@@ -917,12 +1585,10 @@ Object.assign(SypnexAPI.prototype, {
             return;
         }
         
-        console.log(`SypnexAPI [${this.appId}]: Rejoining ${this.roomsToRejoin.size} rooms`);
         
         this.roomsToRejoin.forEach(roomName => {
             try {
                 this.socket.emit('join_room', { room: roomName, appId: this.appId });
-                console.log(`SypnexAPI [${this.appId}]: Rejoined room '${roomName}'`);
             } catch (error) {
                 console.error(`SypnexAPI [${this.appId}]: Error rejoining room '${roomName}':`, error);
             }
@@ -1258,7 +1924,6 @@ Object.assign(SypnexAPI.prototype, {
                     // Create the directory
                     const parentPath = currentPath;
                     await this.createVirtualFolder(part, parentPath);
-                    console.log(`SypnexAPI [${this.appId}]: Created directory: ${fullPath}`);
                 }
                 
                 currentPath = fullPath;
@@ -1292,7 +1957,6 @@ Object.assign(SypnexAPI.prototype, {
             timeout = 10000
         } = options;
         
-        console.log(`SypnexAPI [${this.appId}]: Loading library from ${url}`);
         
         return new Promise((resolve, reject) => {
             const timeoutId = setTimeout(() => {
@@ -1306,10 +1970,8 @@ Object.assign(SypnexAPI.prototype, {
                 clearTimeout(timeoutId);
                 
                 if (localName && window[localName]) {
-                    console.log(`SypnexAPI [${this.appId}]: Library loaded, found global '${localName}'`);
                     resolve(window[localName]);
                 } else {
-                    console.log(`SypnexAPI [${this.appId}]: Library loaded successfully`);
                     resolve(true);
                 }
             };
@@ -1449,14 +2111,13 @@ Object.assign(SypnexAPI.prototype, {
             const modal = document.createElement('div');
             modal.className = 'sypnex-file-explorer-modal';
             modal.innerHTML = `
-                <div class="sypnex-file-explorer-overlay">
-                    <div class="sypnex-file-explorer-container">
-                        <div class="sypnex-file-explorer-header">
-                            <h3>${title}</h3>
-                            <button class="sypnex-file-explorer-close">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
+                <div class="sypnex-file-explorer-container">
+                    <div class="sypnex-file-explorer-header">
+                        <h3><i class="fas fa-folder-open" style="color: var(--accent-color);"></i> ${title}</h3>
+                        <button class="sypnex-file-explorer-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                         
                         <div class="sypnex-file-explorer-toolbar">
                             <div class="sypnex-file-explorer-path">
@@ -1477,21 +2138,6 @@ Object.assign(SypnexAPI.prototype, {
                         </div>
                         
                         <div class="sypnex-file-explorer-content">
-                            <div class="sypnex-file-explorer-sidebar">
-                                <div class="sypnex-file-explorer-quick-access">
-                                    <h4>Quick Access</h4>
-                                    <div class="sypnex-file-explorer-quick-item" data-path="/">
-                                        <i class="fas fa-home"></i> Root
-                                    </div>
-                                    <div class="sypnex-file-explorer-quick-item" data-path="/documents">
-                                        <i class="fas fa-file-alt"></i> Documents
-                                    </div>
-                                    <div class="sypnex-file-explorer-quick-item" data-path="/downloads">
-                                        <i class="fas fa-download"></i> Downloads
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <div class="sypnex-file-explorer-main">
                                 <div class="sypnex-file-explorer-breadcrumb">
                                     <span class="sypnex-file-explorer-breadcrumb-item" data-path="/">Root</span>
@@ -1525,59 +2171,8 @@ Object.assign(SypnexAPI.prototype, {
                 </div>
             `;
 
-            // Add dragging functionality to the modal
-            const makeModalDraggable = (modalElement) => {
-                const header = modalElement.querySelector('.sypnex-file-explorer-header');
-                const container = modalElement.querySelector('.sypnex-file-explorer-container');
-                let isDragging = false;
-                let dragOffset = { x: 0, y: 0 };
-
-                header.addEventListener('mousedown', (e) => {
-                    // Don't start dragging if clicking on the close button
-                    if (e.target.closest('.sypnex-file-explorer-close')) return;
-                    
-                    isDragging = true;
-                    // Use scaled coordinates for accurate positioning
-                    const rect = fileExplorerUtils.getScaledBoundingClientRect(container);
-                    const mouseCoords = fileExplorerUtils.screenToAppCoords(e.clientX, e.clientY);
-                    dragOffset.x = mouseCoords.x - rect.left;
-                    dragOffset.y = mouseCoords.y - rect.top;
-                    e.preventDefault();
-                });
-
-                document.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    
-                    // Use scaled coordinates for accurate positioning
-                    const mouseCoords = fileExplorerUtils.screenToAppCoords(e.clientX, e.clientY);
-                    const x = mouseCoords.x - dragOffset.x;
-                    const y = mouseCoords.y - dragOffset.y;
-                    
-                    // Keep modal within viewport bounds (use scaled viewport dimensions)
-                    const scale = fileExplorerUtils.detectAppScale();
-                    const scaledViewportWidth = window.innerWidth / scale;
-                    const scaledViewportHeight = window.innerHeight / scale;
-                    const scaledContainerWidth = container.offsetWidth / scale;
-                    const scaledContainerHeight = container.offsetHeight / scale;
-                    
-                    const maxX = scaledViewportWidth - scaledContainerWidth;
-                    const maxY = scaledViewportHeight - scaledContainerHeight;
-                    const boundedX = Math.max(0, Math.min(x, maxX));
-                    const boundedY = Math.max(0, Math.min(y, maxY));
-                    
-                    // Convert back to screen coordinates for CSS positioning
-                    const screenX = boundedX * scale;
-                    const screenY = boundedY * scale;
-                    
-                    container.style.left = `${screenX}px`;
-                    container.style.top = `${screenY}px`;
-                    container.style.transform = 'none';
-                });
-
-                document.addEventListener('mouseup', () => {
-                    isDragging = false;
-                });
-            };
+            // Add modal to DOM
+            document.body.appendChild(modal);
 
             // Add styles if not already added
             if (!document.getElementById('sypnex-file-explorer-styles')) {
@@ -1590,71 +2185,74 @@ Object.assign(SypnexAPI.prototype, {
                         left: 0;
                         width: 100vw;
                         height: 100vh;
-                        z-index: 10000;
+                        z-index: 1000;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         padding: 20px;
                         box-sizing: border-box;
+                        background: rgba(0, 0, 0, 0.5);
+                        backdrop-filter: blur(4px);
                     }
                     
                     .sypnex-file-explorer-overlay {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0, 0, 0, 0.8);
-                        backdrop-filter: blur(10px);
+                        display: none;
                     }
                     
                     .sypnex-file-explorer-container {
-                        background: var(--primary-bg, #0a0a0a);
-                        border: 1px solid var(--border-color, #333333);
+                        background: var(--glass-bg);
+                        border: 1px solid var(--glass-border);
                         border-radius: 12px;
-                        width: 800px;
-                        max-width: 90vw;
-                        max-height: 85vh;
+                        width: 100%;
+                        max-width: 800px;
+                        max-height: 90vh;
                         display: flex;
                         flex-direction: column;
-                        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                        backdrop-filter: blur(10px);
+                        margin: 5% auto;
                         position: relative;
-                        transform: translate(-50%, -50%);
-                        left: 50%;
-                        top: 50%;
-                        overflow: hidden;
                     }
                     
                     .sypnex-file-explorer-header {
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        padding: 20px;
-                        border-bottom: 1px solid var(--border-color, #333333);
-                        cursor: move;
-                        user-select: none;
+                        padding: 15px 20px;
+                        border-bottom: 1px solid var(--glass-border);
+                        background: var(--glass-bg);
+                        border-radius: 12px 12px 0 0;
                     }
                     
                     .sypnex-file-explorer-header h3 {
                         margin: 0;
-                        color: var(--accent-color, #00d4ff);
-                        font-size: 1.2em;
+                        color: var(--text-primary);
+                        font-size: 1.1em;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
                     }
                     
                     .sypnex-file-explorer-close {
                         background: none;
                         border: none;
-                        color: var(--text-secondary, #b0b0b0);
-                        font-size: 18px;
+                        color: var(--text-secondary);
+                        font-size: 20px;
                         cursor: pointer;
-                        padding: 5px;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         border-radius: 4px;
                         transition: all 0.2s ease;
                     }
                     
                     .sypnex-file-explorer-close:hover {
-                        background: rgba(255, 255, 255, 0.1);
-                        color: var(--text-primary, #ffffff);
+                        background: rgba(255, 71, 87, 0.1);
+                        color: #ff4757;
                     }
                     
                     .sypnex-file-explorer-toolbar {
@@ -1662,104 +2260,97 @@ Object.assign(SypnexAPI.prototype, {
                         align-items: center;
                         justify-content: space-between;
                         padding: 15px 20px;
-                        border-bottom: 1px solid var(--border-color, #333333);
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
+                        border-bottom: 1px solid var(--glass-border);
+                        background: var(--glass-bg);
+                        min-height: 60px;
                     }
                     
                     .sypnex-file-explorer-hint {
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         font-size: 12px;
                         display: flex;
                         align-items: center;
                         gap: 5px;
+                        flex: 1;
+                        justify-content: center;
+                        white-space: nowrap;
                     }
                     
                     .sypnex-file-explorer-path {
                         display: flex;
                         align-items: center;
                         gap: 10px;
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
                         font-size: 14px;
+                        flex-shrink: 0;
                     }
                     
                     .sypnex-file-explorer-actions {
                         display: flex;
                         gap: 10px;
+                        flex-shrink: 0;
                     }
                     
                     .sypnex-file-explorer-btn {
                         display: flex;
                         align-items: center;
                         gap: 8px;
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
-                        border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
-                        color: var(--text-primary, #ffffff);
+                        background: var(--glass-bg);
+                        border: 1px solid var(--glass-border);
+                        color: var(--text-primary);
                         padding: 8px 16px;
                         border-radius: 6px;
                         cursor: pointer;
                         transition: all 0.2s ease;
                         font-size: 14px;
+                        font-weight: 500;
+                        min-width: 120px;
+                        justify-content: center;
                     }
                     
                     .sypnex-file-explorer-btn:hover {
                         background: rgba(0, 212, 255, 0.1);
-                        border-color: var(--accent-color, #00d4ff);
+                        border-color: var(--accent-color);
+                        box-shadow: 0 2px 8px rgba(0, 212, 255, 0.2);
+                    }
+                    
+                    .sypnex-file-explorer-btn:active {
+                        background: rgba(0, 212, 255, 0.15);
+                        box-shadow: 0 1px 4px rgba(0, 212, 255, 0.3);
                     }
                     
                     .sypnex-file-explorer-btn:disabled {
                         opacity: 0.5;
                         cursor: not-allowed;
+                        box-shadow: none;
                     }
                     
                     .sypnex-file-explorer-btn-primary {
-                        background: var(--accent-color, #00d4ff);
-                        color: var(--primary-bg, #0a0a0a);
+                        background: var(--accent-color);
+                        color: var(--primary-bg);
                         font-weight: 600;
                     }
                     
                     .sypnex-file-explorer-btn-primary:hover:not(:disabled) {
-                        background: var(--accent-hover, #00b8e6);
+                        background: var(--accent-hover);
+                    }
+                    
+                    .sypnex-file-explorer-btn-secondary {
+                        background: rgba(255, 255, 255, 0.1);
+                        border-color: rgba(255, 255, 255, 0.2);
+                    }
+                    
+                    .sypnex-file-explorer-btn-secondary:hover:not(:disabled) {
+                        background: rgba(255, 255, 255, 0.2);
                     }
                     
                     .sypnex-file-explorer-content {
                         display: flex;
                         flex: 1;
                         min-height: 300px;
-                        max-height: calc(85vh - 200px);
+                        max-height: calc(90vh - 200px);
                         overflow: hidden;
-                    }
-                    
-                    .sypnex-file-explorer-sidebar {
-                        width: 200px;
-                        border-right: 1px solid var(--border-color, #333333);
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
-                    }
-                    
-                    .sypnex-file-explorer-quick-access {
-                        padding: 20px;
-                    }
-                    
-                    .sypnex-file-explorer-quick-access h4 {
-                        margin: 0 0 15px 0;
-                        color: var(--accent-color, #00d4ff);
-                        font-size: 1em;
-                    }
-                    
-                    .sypnex-file-explorer-quick-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        padding: 10px;
-                        cursor: pointer;
-                        border-radius: 6px;
-                        transition: all 0.2s ease;
-                        color: var(--text-secondary, #b0b0b0);
-                    }
-                    
-                    .sypnex-file-explorer-quick-item:hover {
-                        background: rgba(0, 212, 255, 0.1);
-                        color: var(--text-primary, #ffffff);
                     }
                     
                     .sypnex-file-explorer-main {
@@ -1770,18 +2361,18 @@ Object.assign(SypnexAPI.prototype, {
                     
                     .sypnex-file-explorer-breadcrumb {
                         padding: 15px 20px;
-                        border-bottom: 1px solid var(--border-color, #333333);
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
+                        border-bottom: 1px solid var(--glass-border);
+                        background: var(--glass-bg);
                     }
                     
                     .sypnex-file-explorer-breadcrumb-item {
-                        color: var(--accent-color, #00d4ff);
+                        color: var(--accent-color);
                         cursor: pointer;
                         transition: color 0.2s ease;
                     }
                     
                     .sypnex-file-explorer-breadcrumb-item:hover {
-                        color: var(--accent-hover, #00b8e6);
+                        color: var(--accent-hover);
                     }
                     
                     .sypnex-file-explorer-list {
@@ -1796,7 +2387,7 @@ Object.assign(SypnexAPI.prototype, {
                         align-items: center;
                         justify-content: center;
                         gap: 10px;
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         padding: 40px;
                     }
                     
@@ -1817,15 +2408,7 @@ Object.assign(SypnexAPI.prototype, {
                     
                     .sypnex-file-explorer-item.selected {
                         background: rgba(0, 212, 255, 0.2);
-                        border: 1px solid var(--accent-color, #00d4ff);
-                    }
-                    
-                    .sypnex-file-explorer-item[data-type="directory"] {
-                        background: rgba(255, 215, 0, 0.05);
-                    }
-                    
-                    .sypnex-file-explorer-item[data-type="directory"]:hover {
-                        background: rgba(255, 215, 0, 0.15);
+                        border: 1px solid var(--accent-color);
                     }
                     
                     .sypnex-file-explorer-item[data-type="directory"] .sypnex-file-explorer-item-icon {
@@ -1835,60 +2418,62 @@ Object.assign(SypnexAPI.prototype, {
                     .sypnex-file-explorer-item-icon {
                         width: 20px;
                         text-align: center;
-                        color: var(--accent-color, #00d4ff);
+                        color: var(--accent-color);
                     }
                     
                     .sypnex-file-explorer-item-arrow {
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         font-size: 12px;
                         opacity: 0.7;
                     }
                     
                     .sypnex-file-explorer-item[data-type="directory"]:hover .sypnex-file-explorer-item-arrow {
-                        color: #ffd700;
+                        color: var(--accent-color);
                         opacity: 1;
                     }
                     
                     .sypnex-file-explorer-item-name {
                         flex: 1;
-                        color: var(--text-primary, #ffffff);
+                        color: var(--text-primary);
                         font-size: 14px;
                     }
                     
                     .sypnex-file-explorer-item-size {
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         font-size: 12px;
                         font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
                     }
                     
                     .sypnex-file-explorer-save-section {
                         padding: 20px;
-                        border-top: 1px solid var(--border-color, #333333);
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
+                        border-top: 1px solid var(--glass-border);
+                        background: var(--glass-bg);
                         flex-shrink: 0;
                     }
                     
                     .sypnex-file-explorer-save-section label {
                         display: block;
                         margin-bottom: 10px;
-                        color: var(--text-primary, #ffffff);
+                        color: var(--text-primary);
                         font-weight: 500;
                     }
                     
                     .sypnex-file-explorer-input {
                         width: 100%;
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
-                        border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
-                        color: var(--text-primary, #ffffff);
+                        background: var(--glass-bg);
+                        border: 1px solid var(--glass-border);
+                        color: var(--text-primary);
                         padding: 10px 15px;
                         border-radius: 6px;
                         font-size: 14px;
                         font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                        transition: all 0.2s ease;
+                        outline: none;
                     }
                     
                     .sypnex-file-explorer-input:focus {
-                        border-color: var(--accent-color, #00d4ff);
-                        outline: none;
+                        border-color: var(--accent-color);
+                        background: rgba(0, 212, 255, 0.05);
                     }
                     
                     .sypnex-file-explorer-footer {
@@ -1896,8 +2481,9 @@ Object.assign(SypnexAPI.prototype, {
                         justify-content: flex-end;
                         gap: 10px;
                         padding: 20px;
-                        border-top: 1px solid var(--border-color, #333333);
-                        background: var(--glass-bg, rgba(26, 26, 26, 0.8));
+                        border-top: 1px solid var(--glass-border);
+                        background: var(--glass-bg);
+                        border-radius: 0 0 12px 12px;
                         flex-shrink: 0;
                     }
                     
@@ -1905,9 +2491,67 @@ Object.assign(SypnexAPI.prototype, {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        color: var(--text-secondary, #b0b0b0);
+                        color: var(--text-secondary);
                         padding: 40px;
                         font-style: italic;
+                    }
+                    
+                    /* Responsive Design */
+                    @media (max-width: 768px) {
+                        .sypnex-file-explorer-modal {
+                            padding: 10px;
+                            align-items: flex-start;
+                            padding-top: 20px;
+                        }
+                        
+                        .sypnex-file-explorer-container {
+                            max-width: 100%;
+                            max-height: calc(100vh - 40px);
+                            margin: 0;
+                        }
+                        
+                        .sypnex-file-explorer-header {
+                            padding: 12px 15px;
+                        }
+                        
+                        .sypnex-file-explorer-header h3 {
+                            font-size: 1em;
+                        }
+                        
+                        .sypnex-file-explorer-toolbar {
+                            flex-direction: column;
+                            gap: 10px;
+                            padding: 12px 15px;
+                        }
+                        
+                        .sypnex-file-explorer-hint {
+                            order: -1;
+                            font-size: 11px;
+                        }
+                        
+                        .sypnex-file-explorer-actions {
+                            justify-content: center;
+                        }
+                        
+                        .sypnex-file-explorer-btn {
+                            padding: 6px 12px;
+                            font-size: 13px;
+                        }
+                        
+                        .sypnex-file-explorer-breadcrumb,
+                        .sypnex-file-explorer-save-section {
+                            padding: 12px 15px;
+                        }
+                        
+                        .sypnex-file-explorer-footer {
+                            padding: 15px;
+                            flex-direction: column;
+                            gap: 8px;
+                        }
+                        
+                        .sypnex-file-explorer-footer button {
+                            width: 100%;
+                        }
                     }
                 `;
                 document.head.appendChild(style);
@@ -1915,9 +2559,6 @@ Object.assign(SypnexAPI.prototype, {
 
             // Add modal to DOM
             document.body.appendChild(modal);
-
-            // Make modal draggable
-            makeModalDraggable(modal);
 
             // Get references to elements
             const pathText = modal.querySelector('.sypnex-file-explorer-path-text');
@@ -1933,12 +2574,43 @@ Object.assign(SypnexAPI.prototype, {
             let selectedItem = null;
 
             // Load directory contents
-            async function loadDirectory(path) {
+            async function loadDirectory(path, isRefresh = false) {
                 try {
-                    fileList.innerHTML = '<div class="sypnex-file-explorer-loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+                    // For refresh operations, add a subtle loading indicator instead of clearing content
+                    if (isRefresh) {
+                        // Add a subtle loading overlay to existing content
+                        const existingContent = fileList.innerHTML;
+                        if (!fileList.querySelector('.sypnex-file-explorer-refresh-overlay')) {
+                            const overlay = document.createElement('div');
+                            overlay.className = 'sypnex-file-explorer-refresh-overlay';
+                            overlay.style.cssText = `
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                right: 0;
+                                bottom: 0;
+                                background: rgba(0, 0, 0, 0.1);
+                                backdrop-filter: blur(1px);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                z-index: 10;
+                                opacity: 0;
+                                transition: opacity 0.2s ease;
+                            `;
+                            overlay.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px;"><i class="fas fa-sync-alt fa-spin"></i> Updating...</div>';
+                            fileList.style.position = 'relative';
+                            fileList.appendChild(overlay);
+                            
+                            // Fade in the overlay
+                            setTimeout(() => overlay.style.opacity = '1', 10);
+                        }
+                    } else {
+                        // For initial loads, show the loading spinner
+                        fileList.innerHTML = '<div class="sypnex-file-explorer-loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+                    }
                     
                     const response = await this.listVirtualFiles(path);
-                    console.log('VFS response:', response);
                     
                     // Handle different response formats
                     let items = [];
@@ -1951,10 +2623,10 @@ Object.assign(SypnexAPI.prototype, {
                         items = Object.values(response);
                     }
                     
-                    console.log('Processed items:', items);
                     
                     if (!items || items.length === 0) {
                         fileList.innerHTML = '<div class="sypnex-file-explorer-empty">This directory is empty</div>';
+                        fileList.style.position = '';
                         return;
                     }
 
@@ -1962,6 +2634,7 @@ Object.assign(SypnexAPI.prototype, {
                     if (!Array.isArray(items)) {
                         console.error('Items is not an array:', items);
                         fileList.innerHTML = '<div class="sypnex-file-explorer-empty">Error: Invalid response format</div>';
+                        fileList.style.position = '';
                         return;
                     }
 
@@ -1995,12 +2668,16 @@ Object.assign(SypnexAPI.prototype, {
                         `;
                     }).join('');
 
+                    // Reset fileList position in case it was modified for overlay
+                    fileList.style.position = '';
+
                     // Update breadcrumb
                     updateBreadcrumb(path);
                     
                 } catch (error) {
                     console.error('Error loading directory:', error);
                     fileList.innerHTML = '<div class="sypnex-file-explorer-empty">Error loading directory</div>';
+                    fileList.style.position = '';
                 }
             }
 
@@ -2070,24 +2747,40 @@ Object.assign(SypnexAPI.prototype, {
                 });
             }
 
-            modal.querySelectorAll('.sypnex-file-explorer-quick-item').forEach(item => {
-                item.addEventListener('click', async () => {
-                    const path = item.dataset.path;
-                    currentPath = path;
-                    if (pathText) pathText.textContent = currentPath;
-                    await loadDirectory.call(this, currentPath);
-                });
-            });
-
             if (refreshBtn) {
                 refreshBtn.addEventListener('click', async () => {
-                    await loadDirectory.call(this, currentPath);
+                    // Add visual loading state without changing button content
+                    const icon = refreshBtn.querySelector('i');
+                    const originalClasses = icon.className;
+                    
+                    // Just change the icon class, don't touch innerHTML
+                    icon.className = 'fas fa-sync-alt fa-spin';
+                    refreshBtn.disabled = true;
+                    refreshBtn.style.opacity = '0.7';
+                    
+                    try {
+                        await loadDirectory.call(this, currentPath, true); // true = isRefresh
+                    } finally {
+                        // Restore button state
+                        icon.className = originalClasses;
+                        refreshBtn.disabled = false;
+                        refreshBtn.style.opacity = '';
+                    }
                 });
             }
 
             if (newFolderBtn) {
                 newFolderBtn.addEventListener('click', async () => {
-                    const folderName = prompt('Enter folder name:');
+                    const folderName = await this.showInputModal(
+                        'Create New Folder',
+                        'Enter folder name:',
+                        {
+                            placeholder: 'e.g., My Documents',
+                            confirmText: 'Create',
+                            icon: 'fas fa-folder-plus'
+                        }
+                    );
+                    
                     if (!folderName) return;
 
                     try {
@@ -2473,5 +3166,366 @@ if (typeof window !== 'undefined') {
         }
     };
 }
+
+
+// === sypnex-api-app-management.js ===
+// SypnexAPI App Management - Application management operations
+// This file extends the SypnexAPI class with app management functionality
+
+// Extend SypnexAPI with app management methods
+Object.assign(SypnexAPI.prototype, {
+    
+    /**
+     * Get available applications from the registry
+     * @async
+     * @returns {Promise<object>} - Available applications data
+     */
+    async getAvailableApps() {
+        try {
+            const response = await fetch(`${this.baseUrl}/updates/latest`);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                throw new Error(`Failed to get available apps: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error getting available apps:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Get list of installed applications
+     * @async
+     * @returns {Promise<Array>} - Array of installed applications
+     */
+    async getInstalledApps() {
+        try {
+            const response = await fetch(`${this.baseUrl}/apps`);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                throw new Error(`Failed to get installed apps: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error getting installed apps:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Update a specific application to the latest version
+     * @async
+     * @param {string} appId - Application ID to update
+     * @param {string} downloadUrl - Download URL for the app update (required)
+     * @returns {Promise<object>} - Update result
+     */
+    async updateApp(appId, downloadUrl) {
+        try {
+            if (!downloadUrl) {
+                throw new Error('Download URL is required for app update');
+            }
+            
+            const requestBody = {
+                download_url: downloadUrl
+            };
+            
+            
+            const fullUrl = `${this.baseUrl}/user-apps/update/${appId}`;
+            
+            const response = await fetch(fullUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                return result;
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Update failed: ${response.status} ${response.statusText}: ${errorData.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error updating app ${appId}:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Refresh the application registry cache
+     * @async
+     * @returns {Promise<object>} - Refresh result
+     */
+    async refreshAppRegistry() {
+        try {
+            const response = await fetch(`${this.baseUrl}/user-apps/refresh`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                return result;
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to refresh app registry: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error refreshing app registry:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Install an application from the registry
+     * @async
+     * @param {string} appId - Application ID to install
+     * @param {object} [options={}] - Installation options
+     * @param {string} [options.version] - Specific version to install (defaults to latest)
+     * @returns {Promise<object>} - Installation result
+     */
+    async installApp(appId, options = {}) {
+        try {
+            const { version } = options;
+            const payload = { app_id: appId };
+            if (version) {
+                payload.version = version;
+            }
+            
+            const response = await fetch(`${this.baseUrl}/user-apps/install`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                return result;
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to install app: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error installing app ${appId}:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Uninstall an application
+     * @async
+     * @param {string} appId - Application ID to uninstall
+     * @returns {Promise<object>} - Uninstallation result
+     */
+    async uninstallApp(appId) {
+        try {
+            const response = await fetch(`${this.baseUrl}/user-apps/uninstall/${appId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                return result;
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to uninstall app: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error uninstalling app ${appId}:`, error);
+            throw error;
+        }
+    }
+    
+});
+
+
+// === sypnex-api-network.js ===
+// SypnexAPI Network - Network operations and HTTP proxy
+// This file extends the SypnexAPI class with network functionality
+
+// Extend SypnexAPI with network methods
+Object.assign(SypnexAPI.prototype, {
+    
+    /**
+     * Proxy an HTTP request through the system
+     * @async
+     * @param {object} options - HTTP request options
+     * @param {string} options.url - Target URL for the request
+     * @param {string} [options.method='GET'] - HTTP method (GET, POST, PUT, DELETE, etc.)
+     * @param {object} [options.headers={}] - HTTP headers to send
+     * @param {*} [options.body] - Request body (will be JSON stringified if object)
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @param {boolean} [options.followRedirects=true] - Whether to follow redirects
+     * @returns {Promise<object>} - Proxy response data
+     */
+    async proxyHTTP(options) {
+        try {
+            const {
+                url,
+                method = 'GET',
+                headers = {},
+                body = null,
+                timeout = 30,
+                followRedirects = true
+            } = options;
+            
+            if (!url) {
+                throw new Error('URL is required for HTTP proxy request');
+            }
+            
+            const proxyRequest = {
+                url,
+                method: method.toUpperCase(),
+                headers,
+                timeout,
+                followRedirects
+            };
+            
+            // Handle body based on content type and data type
+            if (body !== null && body !== undefined) {
+                proxyRequest.body = body;
+            }
+            
+            
+            const response = await fetch(`${this.baseUrl}/proxy/http`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(proxyRequest)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                return result;
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Proxy request failed: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error in HTTP proxy request:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Make a GET request through the proxy
+     * @async
+     * @param {string} url - Target URL
+     * @param {object} [options={}] - Additional options
+     * @param {object} [options.headers={}] - HTTP headers
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @returns {Promise<object>} - Response data
+     */
+    async proxyGET(url, options = {}) {
+        return await this.proxyHTTP({
+            url,
+            method: 'GET',
+            ...options
+        });
+    },
+    
+    /**
+     * Make a POST request through the proxy
+     * @async
+     * @param {string} url - Target URL
+     * @param {*} body - Request body
+     * @param {object} [options={}] - Additional options
+     * @param {object} [options.headers={}] - HTTP headers
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @returns {Promise<object>} - Response data
+     */
+    async proxyPOST(url, body, options = {}) {
+        return await this.proxyHTTP({
+            url,
+            method: 'POST',
+            body,
+            ...options
+        });
+    },
+    
+    /**
+     * Make a PUT request through the proxy
+     * @async
+     * @param {string} url - Target URL
+     * @param {*} body - Request body
+     * @param {object} [options={}] - Additional options
+     * @param {object} [options.headers={}] - HTTP headers
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @returns {Promise<object>} - Response data
+     */
+    async proxyPUT(url, body, options = {}) {
+        return await this.proxyHTTP({
+            url,
+            method: 'PUT',
+            body,
+            ...options
+        });
+    },
+    
+    /**
+     * Make a DELETE request through the proxy
+     * @async
+     * @param {string} url - Target URL
+     * @param {object} [options={}] - Additional options
+     * @param {object} [options.headers={}] - HTTP headers
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @returns {Promise<object>} - Response data
+     */
+    async proxyDELETE(url, options = {}) {
+        return await this.proxyHTTP({
+            url,
+            method: 'DELETE',
+            ...options
+        });
+    },
+    
+    /**
+     * Make a JSON API request through the proxy
+     * @async
+     * @param {string} url - Target URL
+     * @param {object} [options={}] - Request options
+     * @param {string} [options.method='GET'] - HTTP method
+     * @param {object} [options.data] - JSON data to send
+     * @param {object} [options.headers={}] - Additional headers
+     * @param {number} [options.timeout=30] - Request timeout in seconds
+     * @returns {Promise<object>} - Parsed JSON response
+     */
+    async proxyJSON(url, options = {}) {
+        const {
+            method = 'GET',
+            data = null,
+            headers = {},
+            timeout = 30
+        } = options;
+        
+        const requestOptions = {
+            url,
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers
+            },
+            timeout
+        };
+        
+        if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+            requestOptions.body = data;
+        }
+        
+        return await this.proxyHTTP(requestOptions);
+    }
+    
+});
 
 

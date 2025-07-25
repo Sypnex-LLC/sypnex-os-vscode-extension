@@ -47,6 +47,24 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'showConfirmation',
+		signature: 'showConfirmation(title: any, message: any, options?: any): Promise<any>',
+		description: 'Show a confirmation dialog with standard OS styling',
+		isAsync: true
+	},
+	{
+		name: 'showInputModal',
+		signature: 'showInputModal(title: any, message: any, options?: any): Promise<any>',
+		description: 'Show an input modal for getting text input from user',
+		isAsync: true
+	},
+	{
+		name: 'showFileUploadModal',
+		signature: 'showFileUploadModal(title: any, message: any, options?: any): Promise<any>',
+		description: 'Show a file upload modal',
+		isAsync: true
+	},
+	{
 		name: 'getSetting',
 		signature: 'getSetting(key: any, defaultValue?: any): Promise<any>',
 		description: 'Get an application setting',
@@ -371,6 +389,78 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'getAvailableApps',
+		signature: 'getAvailableApps(): Promise<any>',
+		description: 'Get available applications from the registry',
+		isAsync: true
+	},
+	{
+		name: 'getInstalledApps',
+		signature: 'getInstalledApps(): Promise<any>',
+		description: 'Get list of installed applications',
+		isAsync: true
+	},
+	{
+		name: 'updateApp',
+		signature: 'updateApp(appId: any, downloadUrl: any): Promise<any>',
+		description: 'Update a specific application to the latest version',
+		isAsync: true
+	},
+	{
+		name: 'refreshAppRegistry',
+		signature: 'refreshAppRegistry(): Promise<any>',
+		description: 'Refresh the application registry cache',
+		isAsync: true
+	},
+	{
+		name: 'installApp',
+		signature: 'installApp(appId: any, options?: any): Promise<any>',
+		description: 'Install an application from the registry',
+		isAsync: true
+	},
+	{
+		name: 'uninstallApp',
+		signature: 'uninstallApp(appId: any): Promise<any>',
+		description: 'Uninstall an application',
+		isAsync: true
+	},
+	{
+		name: 'proxyHTTP',
+		signature: 'proxyHTTP(options: any): Promise<any>',
+		description: 'Proxy an HTTP request through the system',
+		isAsync: true
+	},
+	{
+		name: 'proxyGET',
+		signature: 'proxyGET(url: any, options?: any): Promise<any>',
+		description: 'Make a GET request through the proxy',
+		isAsync: true
+	},
+	{
+		name: 'proxyPOST',
+		signature: 'proxyPOST(url: any, body: any, options?: any): Promise<any>',
+		description: 'Make a POST request through the proxy',
+		isAsync: true
+	},
+	{
+		name: 'proxyPUT',
+		signature: 'proxyPUT(url: any, body: any, options?: any): Promise<any>',
+		description: 'Make a PUT request through the proxy',
+		isAsync: true
+	},
+	{
+		name: 'proxyDELETE',
+		signature: 'proxyDELETE(url: any, options?: any): Promise<any>',
+		description: 'Make a DELETE request through the proxy',
+		isAsync: true
+	},
+	{
+		name: 'proxyJSON',
+		signature: 'proxyJSON(url: any, options?: any): Promise<any>',
+		description: 'Make a JSON API request through the proxy',
+		isAsync: true
+	},
+	{
 		name: 'detectAppScale',
 		signature: 'detectAppScale(): any',
 		description: 'detectAppScale method from Sypnex API',
@@ -389,8 +479,14 @@ const sypnexApiMethods = [
 		isAsync: false
 	},
 	{
+		name: 'media',
+		signature: 'media(max-width: 768px: any): any',
+		description: 'media method from Sypnex API',
+		isAsync: false
+	},
+	{
 		name: 'loadDirectory',
-		signature: 'loadDirectory(path: any): any',
+		signature: 'loadDirectory(path: any, isRefresh?: any): any',
 		description: 'loadDirectory method from Sypnex API',
 		isAsync: false
 	},
