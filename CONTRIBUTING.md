@@ -1,32 +1,40 @@
-# Contributing to Sypnex OS
+# Contributing to Sypnex OS VS Code Extension
 
-Thank you for your interest in contributing to Sypnex OS! We welcome contributions from developers of all skill levels and backgrounds.
+Thank you for your interest in contributing to the Sypnex OS VS Code Extension! This extension provides IntelliSense support for the Sypnex OS API, making app development faster and more reliable.
+
+## 🏗️ About This Repository
+
+This VS Code extension is part of the larger Sypnex OS ecosystem:
+
+- **[sypnex-os](https://github.com/Sypnex-LLC/sypnex-os)**: Core operating system
+- **[sypnex-os-apps](https://github.com/Sypnex-LLC/sypnex-os-apps)**: Official apps and development guide  
+- **[sypnex-os-vscode-extension](https://github.com/Sypnex-LLC/sypnex-os-vscode-extension)**: This repository - VS Code IntelliSense support
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.7 or higher
+- Node.js and npm
+- VS Code with TypeScript support
 - Git
-- A modern web browser
-- Basic knowledge of JavaScript and Python
+- Basic knowledge of TypeScript and VS Code extension development
 
 ### Setting Up Your Development Environment
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/Sypnex-LLC/sypnex-os.git
-   cd sypnex-os
+   git clone https://github.com/YOUR_USERNAME/sypnex-os-vscode-extension.git
+   cd sypnex-os-vscode-extension
    ```
 3. **Install dependencies**:
    ```bash
-   pip install -r requirements.txt
+   npm install
    ```
-4. **Run the development server**:
+4. **Open in VS Code**:
    ```bash
-   python app.py
+   code .
    ```
-5. **Open your browser** to `http://localhost:5000`
+5. **Press F5** to launch the extension in a new Extension Development Host window
 
 ## 🤖 Development Philosophy
 
@@ -61,30 +69,30 @@ We welcome new ideas. When suggesting features:
 ### 🔧 Code Contributions
 
 #### Areas Where We Need Help
-1. **Core Features**
-   - Window management improvements
-   - Virtual file system enhancements
-   - Service system optimization
+1. **API Coverage**
+   - Adding new SypnexAPI methods to autocomplete
+   - Improving method documentation and signatures
+   - Adding parameter hints and return type information
 
-2. **Frontend Development**
-   - CSS improvements and theming
-   - JavaScript API enhancements
-   - Accessibility improvements
+2. **Extension Features**
+   - Better error handling and validation
+   - Code snippets for common app patterns
+   - Enhanced hover documentation
 
-3. **Backend Development**
-   - Flask route optimization
-   - Database performance
-   - WebSocket improvements
+3. **Developer Experience**
+   - Improved IntelliSense accuracy
+   - Better integration with VS Code features
+   - Performance optimizations
 
 4. **Testing**
-   - Unit tests for core components
-   - Integration tests for API endpoints
-   - Cross-browser compatibility testing
+   - Unit tests for extension functionality
+   - Integration tests with VS Code
+   - Testing across different VS Code versions
 
 5. **Documentation**
-   - API documentation
-   - Developer tutorials
-   - Code comments and docstrings
+   - API documentation improvements
+   - Usage examples and tutorials
+   - Extension setup guides
 
 #### Development Workflow
 
@@ -94,47 +102,52 @@ We welcome new ideas. When suggesting features:
    ```
 
 2. **Make your changes** following our coding standards:
-   - Use clear, descriptive variable and function names
-   - Add comments for complex logic
-   - Follow existing code style and patterns
-   - Test your changes thoroughly
+   - Use TypeScript for all extension code
+   - Follow VS Code extension development best practices
+   - Update API definitions in `sypnex-api.js`
+   - Test your changes in the Extension Development Host
 
 3. **Test your changes**:
-   - Run the application and verify functionality
-   - Test in multiple browsers if relevant
+   - Launch the extension in Extension Development Host (F5)
+   - Test autocomplete functionality
+   - Verify hover documentation works
    - Check for console errors
 
-4. **Commit your changes** with clear messages:
+4. **Update documentation** if needed:
+   - Update `sypnex-api-docs.md` with new API methods
+   - Update README if adding new features
+   - Add JSDoc comments for new functions
+
+5. **Commit your changes** with clear messages:
    ```bash
-   git commit -m "Add feature: clear description of what was added"
+   git commit -m "Add autocomplete for new SypnexAPI methods"
    ```
 
-5. **Push to your fork**:
+6. **Push to your fork**:
    ```bash
    git push origin feature/your-feature-name
    ```
 
-6. **Create a Pull Request** with:
+7. **Create a Pull Request** with:
    - Clear title and description
    - Reference to related issues
-   - Screenshots or demos (if relevant)
-   - Test instructions for reviewers
+   - Screenshots showing the new functionality
+   - Testing instructions for reviewers
 
 ## 📋 Code Style Guidelines
 
-### Python (Backend)
-- Follow PEP 8 style guidelines
+### TypeScript (Extension Code)
+- Follow TypeScript best practices and strict mode
 - Use meaningful variable and function names
-- Add docstrings to functions and classes
-- Keep functions focused and small
-- Use type hints where helpful
-
-### JavaScript (Frontend)
-- Use camelCase for variables and functions
-- Use PascalCase for constructors and classes
-- Add JSDoc comments for functions
-- Prefer const/let over var
+- Add JSDoc comments for functions and interfaces
+- Prefer explicit typing over `any`
 - Use modern ES6+ features appropriately
+
+### JavaScript (API Definitions)
+- Use camelCase for variables and functions
+- Add comprehensive JSDoc comments for all API methods
+- Include parameter types and return value descriptions
+- Follow existing patterns in `sypnex-api.js`
 
 ### General
 - Write self-documenting code
@@ -145,10 +158,10 @@ We welcome new ideas. When suggesting features:
 ## 🧪 Testing
 
 ### Manual Testing
-- Test your changes in Chrome, Firefox, and Safari
-- Verify functionality works as expected
-- Check for console errors or warnings
-- Test on different screen sizes (if UI changes)
+- Test extension functionality in VS Code Extension Development Host
+- Verify autocomplete works for all SypnexAPI methods
+- Check hover documentation displays correctly
+- Test with different file types (JavaScript primarily)
 
 ### Automated Testing
 We're working on expanding our test suite. Contributions to testing infrastructure are welcome!
@@ -172,15 +185,15 @@ When contributing features or fixes:
 ## 🆘 Getting Help
 
 If you're stuck or have questions:
-- Check existing [GitHub Discussions](https://github.com/Sypnex-LLC/sypnex-os/discussions)
-- Create a new discussion for general questions
-- Use GitHub Issues for specific bugs or feature requests
-- Look at the documentation in the repository
+- Check existing [GitHub Discussions](https://github.com/Sypnex-LLC/sypnex-os/discussions) (main OS repository)
+- Create a new discussion for general questions about extension development
+- Use GitHub Issues for specific bugs or feature requests for this extension
+- Look at the VS Code extension development documentation
 
 ## 📝 License
 
-By contributing to Sypnex OS, you agree that your contributions will be licensed under the MIT License.
+By contributing to the Sypnex OS VS Code Extension, you agree that your contributions will be licensed under the MIT License.
 
 ---
 
-Thank you for contributing to Sypnex OS! Every contribution helps make the project better.
+Thank you for contributing to the Sypnex OS ecosystem! Every contribution helps make app development better for everyone.
