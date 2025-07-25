@@ -8,7 +8,7 @@ VS Code extension that provides IntelliSense and autocomplete support for the Sy
 
 This extension is essential for developers building applications on [Sypnex OS](https://github.com/Sypnex-LLC/sypnex-os). Get intelligent code completion for all 65+ SypnexAPI methods.
 
-**👉 [Complete App Development Guide](https://github.com/Sypnex-LLC/sypnex-os-apps/blob/main/USER_APP_DEVELOPMENT_GUIDE.md)**  
+**👉 [Complete App Development Guide](https://github.com/Sypnex-LLC/sypnex-os-apps/blob/master/USER_APP_DEVELOPMENT_GUIDE.md)**  
 **👉 [Official Apps Repository](https://github.com/Sypnex-LLC/sypnex-os-apps)** - Examples, tools, and documentation
 
 ## 🚀 Quick Start
@@ -19,7 +19,7 @@ This extension is essential for developers building applications on [Sypnex OS](
 3. Select the downloaded file and restart VS Code
 
 ### 2. Start Building Apps
-- **[Read the Complete Development Guide](https://github.com/Sypnex-LLC/sypnex-os-apps/blob/main/USER_APP_DEVELOPMENT_GUIDE.md)** - Learn how to build Sypnex OS apps
+- **[Read the Complete Development Guide](https://github.com/Sypnex-LLC/sypnex-os-apps/blob/master/USER_APP_DEVELOPMENT_GUIDE.md)** - Learn how to build Sypnex OS apps
 - **[Explore Example Apps](https://github.com/Sypnex-LLC/sypnex-os-apps)** - See working examples and use development tools
 
 ### 3. For AI Assistant Context (Optional)
