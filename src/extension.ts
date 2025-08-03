@@ -65,6 +65,12 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'createHamburgerMenu',
+		signature: 'createHamburgerMenu(container: any, menuItems: any, options?: any): any',
+		description: 'Create a hamburger menu with customizable items',
+		isAsync: false
+	},
+	{
 		name: 'detectAppScale',
 		signature: 'detectAppScale(): any',
 		description: 'Scaling utilities for handling app scaling across all user applications',
@@ -299,6 +305,12 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'uploadVirtualFileChunked',
+		signature: 'uploadVirtualFileChunked(file: any, parentPath?: any, progressCallback?: any): any',
+		description: 'Upload a file with real progress tracking based on actual upload progress',
+		isAsync: false
+	},
+	{
 		name: 'readVirtualFile',
 		signature: 'readVirtualFile(filePath: any): Promise<any>',
 		description: 'Read a file\'s content',
@@ -314,6 +326,12 @@ const sypnexApiMethods = [
 		name: 'readVirtualFileJSON',
 		signature: 'readVirtualFileJSON(filePath: any): Promise<any>',
 		description: 'Get a file\'s content as JSON',
+		isAsync: true
+	},
+	{
+		name: 'readVirtualFileBlob',
+		signature: 'readVirtualFileBlob(filePath: any): Promise<any>',
+		description: 'Get a file\'s content as Blob (for binary files, images, etc.)',
 		isAsync: true
 	},
 	{
@@ -353,6 +371,12 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
+		name: 'writeVirtualFileBinary',
+		signature: 'writeVirtualFileBinary(filePath: any, binaryData: any): Promise<any>',
+		description: 'Write binary content to a file using the upload endpoint',
+		isAsync: true
+	},
+	{
 		name: 'createVirtualDirectoryStructure',
 		signature: 'createVirtualDirectoryStructure(dirPath: any): Promise<any>',
 		description: 'Create a directory structure (creates parent directories if needed)',
@@ -368,12 +392,6 @@ const sypnexApiMethods = [
 		name: 'showFileExplorer',
 		signature: 'showFileExplorer(options?: any): Promise<any>',
 		description: 'Show a file explorer modal for selecting files or directories',
-		isAsync: true
-	},
-	{
-		name: 'executeTerminalCommand',
-		signature: 'executeTerminalCommand(command: any): Promise<any>',
-		description: 'Execute a terminal command',
 		isAsync: true
 	},
 	{
@@ -481,7 +499,7 @@ const sypnexApiMethods = [
 	{
 		name: 'proxyHTTP',
 		signature: 'proxyHTTP(options: any): Promise<any>',
-		description: 'Proxy an HTTP request through the system',
+		description: 'Proxy an HTTP request through the system (tries direct CORS, falls back to proxy)',
 		isAsync: true
 	},
 	{
@@ -513,6 +531,12 @@ const sypnexApiMethods = [
 		signature: 'proxyJSON(url: any, options?: any): Promise<any>',
 		description: 'Make a JSON API request through the proxy',
 		isAsync: true
+	},
+	{
+		name: 'forEach',
+		signature: 'forEach(item?: any): any',
+		description: 'forEach method from Sypnex API',
+		isAsync: false
 	},
 	{
 		name: 'scaling',

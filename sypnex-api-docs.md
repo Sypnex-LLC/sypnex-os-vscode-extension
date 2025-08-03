@@ -73,6 +73,15 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {string} title - Modal title
 -  {string} message - Modal message/label
 
+### `createHamburgerMenu(container, menuItems, options = {})`
+- **Description:** Create a hamburger menu with customizable items
+- **Returns:** any
+- **Usage:** `sypnexAPI.createHamburgerMenu(container, menuItems, options = {})`
+
+**Parameters:**
+-  {HTMLElement} container - The container element to append the menu to
+-  {Array} menuItems - Array of menu item objects
+
 ### `detectAppScale()`
 - **Description:** Scaling utilities for handling app scaling across all user applications
 - **Returns:** any
@@ -352,6 +361,16 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {File} file - File object from input element
 -  {string} parentPath - Parent directory path (defaults to '/')
 
+### `uploadVirtualFileChunked(file, parentPath = '/', progressCallback = null)`
+- **Description:** Upload a file with real progress tracking based on actual upload progress
+- **Returns:** any
+- **Usage:** `sypnexAPI.uploadVirtualFileChunked(file, parentPath = '/', progressCallback = null)`
+
+**Parameters:**
+-  {File} file - File object from input element
+-  {string} parentPath - Parent directory path (defaults to '/')
+-  {Function} progressCallback - Callback for progress updates (percent)
+
 ### `readVirtualFile(filePath)`
 - **Description:** Read a file\'s content
 - **Returns:** Promise
@@ -372,6 +391,14 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Description:** Get a file\'s content as JSON
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.readVirtualFileJSON(filePath)`
+
+**Parameters:**
+-  {string} filePath - Path to the file
+
+### `readVirtualFileBlob(filePath)`
+- **Description:** Get a file\'s content as Blob (for binary files, images, etc.)
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.readVirtualFileBlob(filePath)`
 
 **Parameters:**
 -  {string} filePath - Path to the file
@@ -426,6 +453,15 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {string} filePath - Path to the file
 -  {object} data - JSON data to write
 
+### `writeVirtualFileBinary(filePath, binaryData)`
+- **Description:** Write binary content to a file using the upload endpoint
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.writeVirtualFileBinary(filePath, binaryData)`
+
+**Parameters:**
+-  {string} filePath - Path to the file
+-  {Uint8Array|Blob} binaryData - Binary data to write
+
 ### `createVirtualDirectoryStructure(dirPath)`
 - **Description:** Create a directory structure (creates parent directories if needed)
 - **Returns:** Promise
@@ -450,14 +486,6 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 
 **Parameters:**
 -  {object} options - Configuration options
-
-### `executeTerminalCommand(command)`
-- **Description:** Execute a terminal command
-- **Returns:** Promise
-- **Usage:** `await sypnexAPI.executeTerminalCommand(command)`
-
-**Parameters:**
--  {string} command - Command to execute
 
 ### `writeLog(logData)`
 - **Description:** Write a log entry
@@ -573,7 +601,7 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {string} appId - Application ID to uninstall
 
 ### `proxyHTTP(options)`
-- **Description:** Proxy an HTTP request through the system
+- **Description:** Proxy an HTTP request through the system (tries direct CORS, falls back to proxy)
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.proxyHTTP(options)`
 
@@ -621,6 +649,13 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 
 **Parameters:**
 -  {string} url - Target URL
+
+### `forEach(item => {
+            if (item.type === 'separator')`
+- **Description:** forEach method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.forEach(item => {
+            if (item.type === 'separator')`
 
 ### `scaling()`
 - **Description:** scaling method from Sypnex API

@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-07-25 02:10:21.369288
+// Generated: 2025-08-03 23:24:22.072751
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -216,6 +216,46 @@ class SypnexAPI {
             return false;
         }
     }
+}
+
+// Export for use in modules (if supported)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = SypnexAPI;
+}
+
+// Make SypnexAPI globally available for OS use
+if (typeof window !== 'undefined') {
+    window.SypnexAPI = SypnexAPI;
+}
+
+// Global fetch override for automatic token injection
+// This will be included in both main system and sandboxed apps
+if (typeof window !== 'undefined' && window.fetch && !window._sypnexFetchOverridden) {
+    const originalFetch = window.fetch;
+    
+    window.fetch = function(url, options = {}) {
+        // Initialize headers if not present
+        if (!options.headers) {
+            options.headers = {};
+        }
+        
+        // Add access token header to all fetch requests
+        options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJfZDdmYjJlOGNfZTZjMyIsImNyZWF0ZWRfYXQiOjE3NTQyNTc5MzEuMTQzOTIxNCwiZXhwIjoxNzU0MzQ0MzMxLjE0MzkyMTksImlzcyI6ImNicWJ6NmlqNHM2OWp5aXoiLCJpYXQiOjE3NTQyNTc5MzEuMTQzOTI1N30.f5NDdJalm0UkKrrdfdUYVviT0zlCEfHnuXlpxOXpmuI';
+        
+        // Call original fetch with modified options
+        return originalFetch(url, options);
+    };
+    
+    // Mark as overridden to prevent double-override
+    window._sypnexFetchOverridden = true;
+} 
+
+// === sypnex-api-ui.js ===
+// SypnexAPI UI Components - Modal dialogs, confirmations, file pickers, etc.
+// This file extends the SypnexAPI class with UI component functionality
+
+// Extend SypnexAPI with UI methods
+Object.assign(SypnexAPI.prototype, {
 
     /**
      * Show a confirmation dialog with standard OS styling
@@ -243,7 +283,7 @@ class SypnexAPI {
             if (existingModal) {
                 existingModal.remove();
             }
-            
+
             // Create the modal with proper OS styling
             const modal = document.createElement('div');
             modal.id = 'sypnex-confirmation-modal';
@@ -257,7 +297,7 @@ class SypnexAPI {
                 height: 100%;
                 background-color: rgba(0, 0, 0, 0.5);
             `;
-            
+
             // Create modal content with proper structure
             const modalContent = document.createElement('div');
             modalContent.style.cssText = `
@@ -270,7 +310,7 @@ class SypnexAPI {
                 max-width: 500px;
                 backdrop-filter: blur(10px);
             `;
-            
+
             // Modal header
             const modalHeader = document.createElement('div');
             modalHeader.style.cssText = `
@@ -280,14 +320,14 @@ class SypnexAPI {
                 padding: 20px;
                 border-bottom: 1px solid var(--glass-border);
             `;
-            
+
             const headerTitle = document.createElement('h3');
             headerTitle.style.cssText = `
                 margin: 0;
                 color: var(--text-primary);
             `;
             headerTitle.innerHTML = `<i class="${icon}"></i> ${title}`;
-            
+
             const closeBtn = document.createElement('button');
             closeBtn.innerHTML = '&times;';
             closeBtn.style.cssText = `
@@ -299,14 +339,14 @@ class SypnexAPI {
             `;
             closeBtn.onmouseover = () => closeBtn.style.color = 'var(--text-primary)';
             closeBtn.onmouseout = () => closeBtn.style.color = 'var(--text-secondary)';
-            
+
             modalHeader.appendChild(headerTitle);
             modalHeader.appendChild(closeBtn);
-            
+
             // Modal body
             const modalBody = document.createElement('div');
             modalBody.style.cssText = `padding: 20px;`;
-            
+
             const messageP = document.createElement('p');
             messageP.style.cssText = `
                 color: var(--text-primary);
@@ -315,12 +355,12 @@ class SypnexAPI {
             `;
             messageP.textContent = message;
             modalBody.appendChild(messageP);
-            
+
             // Add warning text for danger type
             if (type === 'danger') {
                 const warningP = document.createElement('p');
                 warningP.style.cssText = `
-                    color: var(--danger-color, #ff4444);
+                    color: var(--error-color);
                     margin: 10px 0 0 0;
                     font-size: 14px;
                     font-style: italic;
@@ -328,7 +368,7 @@ class SypnexAPI {
                 warningP.textContent = 'This action cannot be undone.';
                 modalBody.appendChild(warningP);
             }
-            
+
             // Modal footer
             const modalFooter = document.createElement('div');
             modalFooter.style.cssText = `
@@ -338,24 +378,24 @@ class SypnexAPI {
                 padding: 20px;
                 border-top: 1px solid var(--glass-border);
             `;
-            
+
             const cancelBtn = document.createElement('button');
             cancelBtn.textContent = cancelText;
             cancelBtn.className = 'app-btn secondary';
-            
+
             const confirmBtn = document.createElement('button');
             confirmBtn.textContent = confirmText;
             confirmBtn.className = `app-btn ${type === 'danger' ? 'danger' : 'primary'}`;
-            
+
             modalFooter.appendChild(cancelBtn);
             modalFooter.appendChild(confirmBtn);
-            
+
             // Assemble modal
             modalContent.appendChild(modalHeader);
             modalContent.appendChild(modalBody);
             modalContent.appendChild(modalFooter);
             modal.appendChild(modalContent);
-            
+
             // Add to document
             document.body.appendChild(modal);
 
@@ -379,7 +419,7 @@ class SypnexAPI {
             };
             document.addEventListener('keydown', escapeHandler);
         });
-    }
+    },
 
     /**
      * Show an input modal for getting text input from user
@@ -410,7 +450,7 @@ class SypnexAPI {
             if (existingModal) {
                 existingModal.remove();
             }
-            
+
             // Create the modal
             const modal = document.createElement('div');
             modal.id = 'sypnex-input-modal';
@@ -425,7 +465,7 @@ class SypnexAPI {
                 background-color: rgba(0, 0, 0, 0.5);
                 backdrop-filter: blur(4px);
             `;
-            
+
             // Create modal content
             const modalContent = document.createElement('div');
             modalContent.style.cssText = `
@@ -439,7 +479,7 @@ class SypnexAPI {
                 backdrop-filter: blur(10px);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             `;
-            
+
             // Modal header
             const modalHeader = document.createElement('div');
             modalHeader.style.cssText = `
@@ -451,7 +491,7 @@ class SypnexAPI {
                 background: var(--glass-bg);
                 border-radius: 12px 12px 0 0;
             `;
-            
+
             const headerTitle = document.createElement('h3');
             headerTitle.style.cssText = `
                 margin: 0;
@@ -462,7 +502,7 @@ class SypnexAPI {
                 gap: 10px;
             `;
             headerTitle.innerHTML = `<i class="${icon}" style="color: var(--accent-color);"></i> ${title}`;
-            
+
             const closeBtn = document.createElement('button');
             closeBtn.innerHTML = '&times;';
             closeBtn.style.cssText = `
@@ -490,17 +530,17 @@ class SypnexAPI {
                 closeBtn.style.color = 'var(--text-secondary)';
                 closeBtn.style.transform = 'scale(1)';
             };
-            
+
             modalHeader.appendChild(headerTitle);
             modalHeader.appendChild(closeBtn);
-            
+
             // Modal body
             const modalBody = document.createElement('div');
             modalBody.style.cssText = `
                 padding: 20px;
                 background: var(--glass-bg);
             `;
-            
+
             const label = document.createElement('label');
             label.style.cssText = `
                 display: block;
@@ -510,7 +550,7 @@ class SypnexAPI {
                 font-size: 14px;
             `;
             label.textContent = message;
-            
+
             let input;
             if (inputType === 'textarea') {
                 input = document.createElement('textarea');
@@ -542,10 +582,10 @@ class SypnexAPI {
                     box-sizing: border-box;
                 `;
             }
-            
+
             input.placeholder = placeholder;
             input.value = defaultValue;
-            
+
             input.onfocus = () => {
                 input.style.borderColor = 'var(--accent-color)';
                 input.style.boxShadow = '0 0 0 2px rgba(0, 212, 255, 0.2)';
@@ -554,10 +594,10 @@ class SypnexAPI {
                 input.style.borderColor = 'var(--glass-border)';
                 input.style.boxShadow = 'none';
             };
-            
+
             modalBody.appendChild(label);
             modalBody.appendChild(input);
-            
+
             // Modal footer
             const modalFooter = document.createElement('div');
             modalFooter.style.cssText = `
@@ -569,27 +609,27 @@ class SypnexAPI {
                 background: var(--glass-bg);
                 border-radius: 0 0 12px 12px;
             `;
-            
+
             const cancelBtn = document.createElement('button');
             cancelBtn.textContent = cancelText;
             cancelBtn.className = 'app-btn secondary';
-            
+
             const confirmBtn = document.createElement('button');
             confirmBtn.textContent = confirmText;
             confirmBtn.className = 'app-btn primary';
-            
+
             modalFooter.appendChild(cancelBtn);
             modalFooter.appendChild(confirmBtn);
-            
+
             // Assemble modal
             modalContent.appendChild(modalHeader);
             modalContent.appendChild(modalBody);
             modalContent.appendChild(modalFooter);
             modal.appendChild(modalContent);
-            
+
             // Add to document
             document.body.appendChild(modal);
-            
+
             // Focus the input
             setTimeout(() => input.focus(), 100);
 
@@ -629,7 +669,7 @@ class SypnexAPI {
             };
             document.addEventListener('keydown', escapeHandler);
         });
-    }
+    },
 
     /**
      * Show a file upload modal
@@ -647,7 +687,8 @@ class SypnexAPI {
             confirmText = 'Upload',
             cancelText = 'Cancel',
             icon = 'fas fa-upload',
-            accept = '*'
+            accept = '*',
+            uploadCallback = null
         } = options;
 
         return new Promise((resolve) => {
@@ -656,7 +697,7 @@ class SypnexAPI {
             if (existingModal) {
                 existingModal.remove();
             }
-            
+
             // Create the modal
             const modal = document.createElement('div');
             modal.id = 'sypnex-upload-modal';
@@ -671,7 +712,7 @@ class SypnexAPI {
                 background-color: rgba(0, 0, 0, 0.5);
                 backdrop-filter: blur(4px);
             `;
-            
+
             // Create modal content
             const modalContent = document.createElement('div');
             modalContent.style.cssText = `
@@ -685,7 +726,7 @@ class SypnexAPI {
                 backdrop-filter: blur(10px);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             `;
-            
+
             // Modal header
             const modalHeader = document.createElement('div');
             modalHeader.style.cssText = `
@@ -697,7 +738,7 @@ class SypnexAPI {
                 background: var(--glass-bg);
                 border-radius: 12px 12px 0 0;
             `;
-            
+
             const headerTitle = document.createElement('h3');
             headerTitle.style.cssText = `
                 margin: 0;
@@ -708,7 +749,7 @@ class SypnexAPI {
                 gap: 10px;
             `;
             headerTitle.innerHTML = `<i class="${icon}" style="color: var(--accent-color);"></i> ${title}`;
-            
+
             const closeBtn = document.createElement('button');
             closeBtn.innerHTML = '&times;';
             closeBtn.style.cssText = `
@@ -736,17 +777,17 @@ class SypnexAPI {
                 closeBtn.style.color = 'var(--text-secondary)';
                 closeBtn.style.transform = 'scale(1)';
             };
-            
+
             modalHeader.appendChild(headerTitle);
             modalHeader.appendChild(closeBtn);
-            
+
             // Modal body
             const modalBody = document.createElement('div');
             modalBody.style.cssText = `
                 padding: 20px;
                 background: var(--glass-bg);
             `;
-            
+
             const label = document.createElement('label');
             label.style.cssText = `
                 display: block;
@@ -756,14 +797,14 @@ class SypnexAPI {
                 font-size: 14px;
             `;
             label.textContent = message;
-            
+
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = accept;
             fileInput.style.cssText = `
                 display: none;
             `;
-            
+
             // Custom file input button
             const customFileBtn = document.createElement('button');
             customFileBtn.type = 'button';
@@ -784,7 +825,7 @@ class SypnexAPI {
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Choose File to Upload</span>
             `;
-            
+
             customFileBtn.onmouseover = () => {
                 customFileBtn.style.borderColor = 'var(--accent-color)';
                 customFileBtn.style.background = 'rgba(0, 212, 255, 0.1)';
@@ -795,12 +836,12 @@ class SypnexAPI {
                 customFileBtn.style.background = 'rgba(0, 212, 255, 0.05)';
                 customFileBtn.style.transform = 'translateY(0)';
             };
-            
+
             // Click handler for custom button
             customFileBtn.addEventListener('click', () => {
                 fileInput.click();
             });
-            
+
             // File info display
             const fileInfo = document.createElement('div');
             fileInfo.style.cssText = `
@@ -811,12 +852,58 @@ class SypnexAPI {
                 padding: 10px;
                 margin-top: 10px;
             `;
-            
+
+            // Progress bar container (hidden initially)
+            const progressContainer = document.createElement('div');
+            progressContainer.style.cssText = `
+                display: none;
+                margin-top: 15px;
+            `;
+
+            const progressLabel = document.createElement('div');
+            progressLabel.style.cssText = `
+                color: var(--text-primary);
+                font-size: 14px;
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            `;
+            progressLabel.innerHTML = `
+                <span>Uploading...</span>
+                <span class="progress-percent">0%</span>
+            `;
+
+            const progressBarBg = document.createElement('div');
+            progressBarBg.style.cssText = `
+                width: 100%;
+                height: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                overflow: hidden;
+                border: 1px solid var(--glass-border);
+            `;
+
+            const progressBarFill = document.createElement('div');
+            progressBarFill.style.cssText = `
+                width: 0%;
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent-color), #00ff88);
+                border-radius: 4px;
+                transition: width 0.3s ease;
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            `;
+
+            progressBarBg.appendChild(progressBarFill);
+            progressContainer.appendChild(progressLabel);
+            progressContainer.appendChild(progressBarBg);
+
             modalBody.appendChild(label);
             modalBody.appendChild(customFileBtn);
             modalBody.appendChild(fileInput);
             modalBody.appendChild(fileInfo);
-            
+            modalBody.appendChild(progressContainer);
+
             // Modal footer
             const modalFooter = document.createElement('div');
             modalFooter.style.cssText = `
@@ -828,25 +915,25 @@ class SypnexAPI {
                 background: var(--glass-bg);
                 border-radius: 0 0 12px 12px;
             `;
-            
+
             const cancelBtn = document.createElement('button');
             cancelBtn.textContent = cancelText;
             cancelBtn.className = 'app-btn secondary';
-            
+
             const confirmBtn = document.createElement('button');
             confirmBtn.textContent = confirmText;
             confirmBtn.className = 'app-btn primary';
             confirmBtn.disabled = true;
-            
+
             modalFooter.appendChild(cancelBtn);
             modalFooter.appendChild(confirmBtn);
-            
+
             // Assemble modal
             modalContent.appendChild(modalHeader);
             modalContent.appendChild(modalBody);
             modalContent.appendChild(modalFooter);
             modal.appendChild(modalContent);
-            
+
             // Add to document
             document.body.appendChild(modal);
 
@@ -855,7 +942,7 @@ class SypnexAPI {
                 const file = e.target.files[0];
                 if (file) {
                     confirmBtn.disabled = false;
-                    
+
                     // Update custom button appearance
                     customFileBtn.innerHTML = `
                         <i class="fas fa-check-circle" style="color: var(--accent-color);"></i>
@@ -863,7 +950,7 @@ class SypnexAPI {
                     `;
                     customFileBtn.style.borderColor = 'var(--accent-color)';
                     customFileBtn.style.background = 'rgba(0, 212, 255, 0.15)';
-                    
+
                     fileInfo.style.display = 'block';
                     fileInfo.innerHTML = `
                         <p style="margin: 5px 0; color: var(--text-primary); font-size: 14px;">
@@ -875,7 +962,7 @@ class SypnexAPI {
                     `;
                 } else {
                     confirmBtn.disabled = true;
-                    
+
                     // Reset custom button appearance
                     customFileBtn.innerHTML = `
                         <i class="fas fa-cloud-upload-alt"></i>
@@ -883,7 +970,7 @@ class SypnexAPI {
                     `;
                     customFileBtn.style.borderColor = 'var(--glass-border)';
                     customFileBtn.style.background = 'rgba(0, 212, 255, 0.05)';
-                    
+
                     fileInfo.style.display = 'none';
                 }
             });
@@ -898,9 +985,85 @@ class SypnexAPI {
             // Event listeners
             closeBtn.addEventListener('click', () => closeModal(null));
             cancelBtn.addEventListener('click', () => closeModal(null));
-            confirmBtn.addEventListener('click', () => {
+            confirmBtn.addEventListener('click', async () => {
                 const file = fileInput.files[0];
-                if (file) {
+                if (file && uploadCallback) {
+                    // Show progress UI
+                    progressContainer.style.display = 'block';
+                    confirmBtn.disabled = true;
+                    customFileBtn.style.display = 'none';
+                    
+                    // Change cancel button to indicate it can cancel upload
+                    cancelBtn.textContent = 'Cancel Upload';
+                    let currentUpload = null;
+                    
+                    // Progress callback function
+                    const updateProgress = (percent) => {
+                        progressBarFill.style.width = percent + '%';
+                        progressContainer.querySelector('.progress-percent').textContent = Math.round(percent) + '%';
+                    };
+                    
+                    // Update cancel button handler for upload cancellation
+                    const uploadCancelHandler = () => {
+                        if (currentUpload && currentUpload.abort) {
+                            currentUpload.abort();
+                        }
+                        closeModal(null);
+                    };
+                    
+                    // Replace cancel button event listener
+                    cancelBtn.removeEventListener('click', closeModal);
+                    cancelBtn.addEventListener('click', uploadCancelHandler);
+                    
+                    try {
+                        // Call the upload function with progress callback
+                        const uploadResult = uploadCallback(file, updateProgress);
+                        
+                        // Check if uploadCallback returns an object with promise and abort
+                        if (uploadResult && uploadResult.promise && uploadResult.abort) {
+                            currentUpload = uploadResult;
+                            const result = await uploadResult.promise;
+                            closeModal(result);
+                        } else {
+                            // Fallback for legacy uploadCallback that returns just a promise
+                            const result = await uploadResult;
+                            closeModal(result);
+                        }
+                    } catch (error) {
+                        // Hide progress and show error
+                        progressContainer.style.display = 'none';
+                        confirmBtn.disabled = false;
+                        cancelBtn.textContent = cancelText; // Reset cancel button text
+                        customFileBtn.style.display = 'block';
+                        
+                        // Restore original cancel handler
+                        cancelBtn.removeEventListener('click', uploadCancelHandler);
+                        cancelBtn.addEventListener('click', () => closeModal(null));
+                        
+                        // Show error in the modal unless it was cancelled
+                        if (error.message !== 'Upload cancelled by user') {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.style.cssText = `
+                                background: rgba(255, 71, 87, 0.1);
+                                border: 1px solid rgba(255, 71, 87, 0.3);
+                                border-radius: 6px;
+                                padding: 10px;
+                                margin-top: 10px;
+                                color: #ff4757;
+                            `;
+                            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Upload failed: ${error.message}`;
+                            modalBody.appendChild(errorDiv);
+                            
+                            // Remove error after 5 seconds
+                            setTimeout(() => {
+                                if (errorDiv.parentNode) {
+                                    errorDiv.remove();
+                                }
+                            }, 5000);
+                        }
+                    }
+                } else if (file) {
+                    // Fallback to regular modal behavior if no upload callback
                     closeModal(file);
                 }
             });
@@ -913,18 +1076,194 @@ class SypnexAPI {
             };
             document.addEventListener('keydown', escapeHandler);
         });
+    },
+
+    /**
+     * Create a hamburger menu with customizable items
+     * @param {HTMLElement} container - The container element to append the menu to
+     * @param {Array} menuItems - Array of menu item objects
+     * @param {object} [options={}] - Configuration options
+     * @param {string} [options.position='right'] - Position of menu ('left' or 'right')
+     * @param {string} [options.buttonClass=''] - Additional CSS classes for the button
+     * @param {string} [options.menuId=''] - Custom ID for the menu (auto-generated if not provided)
+     * @returns {object} Object with methods to control the menu
+     * 
+     * @example
+     * const menuItems = [
+     *   { icon: 'fas fa-sync-alt', text: 'Refresh', action: () => console.log('Refresh') },
+     *   { icon: 'fas fa-folder-plus', text: 'New Folder', action: () => console.log('New Folder') },
+     *   { type: 'separator' },
+     *   { icon: 'fas fa-upload', text: 'Upload File', action: () => console.log('Upload') }
+     * ];
+     * 
+     * const menu = sypnexAPI.createHamburgerMenu(container, menuItems, { position: 'right' });
+     */
+    createHamburgerMenu(container, menuItems, options = {}) {
+        const {
+            position = 'right',
+            buttonClass = '',
+            menuId = `hamburger-menu-${Date.now()}`
+        } = options;
+
+        // Create hamburger button
+        const hamburgerBtn = document.createElement('button');
+        hamburgerBtn.className = `hamburger-btn ${buttonClass}`;
+        hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        hamburgerBtn.style.cssText = `
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        `;
+
+        // Create dropdown menu
+        const dropdownMenu = document.createElement('div');
+        dropdownMenu.id = menuId;
+        dropdownMenu.className = 'sypnex-dropdown-menu';
+        dropdownMenu.style.cssText = `
+            display: none;
+            position: absolute;
+            ${position}: 0;
+            top: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            min-width: 180px;
+            width: 180px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 0;
+            margin-top: 4px;
+            backdrop-filter: blur(10px);
+        `;
+
+        // Populate menu items
+        menuItems.forEach(item => {
+            if (item.type === 'separator') {
+                const separator = document.createElement('div');
+                separator.style.cssText = `
+                    height: 1px;
+                    background: var(--glass-border);
+                    margin: 4px 0;
+                `;
+                dropdownMenu.appendChild(separator);
+            } else {
+                const menuItem = document.createElement('button');
+                menuItem.className = 'sypnex-menu-item';
+                menuItem.innerHTML = `
+                    <i class="${item.icon}" style="width: 16px; margin-right: 10px;"></i>
+                    ${item.text}
+                `;
+                menuItem.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    padding: 10px 16px;
+                    background: none;
+                    border: none;
+                    text-align: left;
+                    color: var(--text-primary);
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
+                    font-size: 14px;
+                `;
+
+                menuItem.addEventListener('mouseenter', () => {
+                    menuItem.style.background = 'var(--glass-hover)';
+                });
+
+                menuItem.addEventListener('mouseleave', () => {
+                    menuItem.style.background = 'none';
+                });
+
+                menuItem.addEventListener('click', () => {
+                    if (typeof item.action === 'function') {
+                        item.action();
+                    }
+                    hideMenu();
+                });
+
+                dropdownMenu.appendChild(menuItem);
+            }
+        });
+
+        // Setup container with relative positioning
+        if (container.style.position !== 'relative' && container.style.position !== 'absolute') {
+            container.style.position = 'relative';
+        }
+
+        // Append elements to container
+        container.appendChild(hamburgerBtn);
+        container.appendChild(dropdownMenu);
+
+        // Show/hide functionality
+        const showMenu = () => {
+            dropdownMenu.style.display = 'block';
+            hamburgerBtn.style.background = 'var(--glass-hover)';
+        };
+
+        const hideMenu = () => {
+            dropdownMenu.style.display = 'none';
+            hamburgerBtn.style.background = 'var(--glass-bg)';
+        };
+
+        const toggleMenu = () => {
+            if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                showMenu();
+            } else {
+                hideMenu();
+            }
+        };
+
+        // Event listeners
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                hideMenu();
+            }
+        });
+
+        // Hover effects for button
+        hamburgerBtn.addEventListener('mouseenter', () => {
+            if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                hamburgerBtn.style.background = 'var(--glass-hover)';
+            }
+        });
+
+        hamburgerBtn.addEventListener('mouseleave', () => {
+            if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                hamburgerBtn.style.background = 'var(--glass-bg)';
+            }
+        });
+
+        // Return control object
+        return {
+            show: showMenu,
+            hide: hideMenu,
+            toggle: toggleMenu,
+            button: hamburgerBtn,
+            menu: dropdownMenu,
+            destroy: () => {
+                hamburgerBtn.remove();
+                dropdownMenu.remove();
+            }
+        };
     }
-}
 
-// Export for use in modules (if supported)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SypnexAPI;
-}
 
-// Make SypnexAPI globally available for OS use
-if (typeof window !== 'undefined') {
-    window.SypnexAPI = SypnexAPI;
-} 
+
+});
 
 // === sypnex-api-scaling.js ===
 // SypnexAPI Scaling - Centralized scaling utilities for all apps
@@ -1992,7 +2331,7 @@ Object.assign(SypnexAPI.prototype, {
             formData.append('file', file);
             formData.append('parent_path', parentPath);
             
-            const response = await fetch(`${this.baseUrl}/virtual-files/upload-file`, {
+            const response = await fetch(`${this.baseUrl}/virtual-files/upload-file-streaming`, {
                 method: 'POST',
                 body: formData
             });
@@ -2008,7 +2347,88 @@ Object.assign(SypnexAPI.prototype, {
             throw error;
         }
     },
-    
+
+    /**
+     * Upload a file with real progress tracking based on actual upload progress
+     * @param {File} file - File object from input element
+     * @param {string} parentPath - Parent directory path (defaults to '/')
+     * @param {Function} progressCallback - Callback for progress updates (percent)
+     * @returns {Object} - Object with promise and abort method { promise: Promise<object>, abort: Function }
+     */
+    uploadVirtualFileChunked(file, parentPath = '/', progressCallback = null) {
+        try {
+            if (progressCallback) progressCallback(0);
+            
+            // Create FormData for the upload
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('parent_path', parentPath);
+            
+            // Create XMLHttpRequest for progress tracking
+            let xhr = null;
+            
+            const promise = new Promise((resolve, reject) => {
+                xhr = new XMLHttpRequest();
+                
+                // Track upload progress
+                xhr.upload.addEventListener('progress', (event) => {
+                    if (event.lengthComputable && progressCallback) {
+                        const percentComplete = Math.round((event.loaded / event.total) * 100);
+                        progressCallback(percentComplete);
+                    }
+                });
+                
+                // Handle successful completion
+                xhr.addEventListener('load', () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const result = JSON.parse(xhr.responseText);
+                            if (progressCallback) progressCallback(100);
+                            resolve(result);
+                        } catch (parseError) {
+                            reject(new Error('Invalid JSON response from server'));
+                        }
+                    } else {
+                        try {
+                            const errorData = JSON.parse(xhr.responseText);
+                            reject(new Error(errorData.error || `Upload failed with status: ${xhr.status}`));
+                        } catch (parseError) {
+                            reject(new Error(`Upload failed with status: ${xhr.status}`));
+                        }
+                    }
+                });
+                
+                // Handle errors
+                xhr.addEventListener('error', () => {
+                    reject(new Error('Network error during upload'));
+                });
+                
+                // Handle abort
+                xhr.addEventListener('abort', () => {
+                    reject(new Error('Upload cancelled by user'));
+                });
+                
+                // Start the upload
+                xhr.open('POST', `${this.baseUrl}/virtual-files/upload-file-streaming`);
+                xhr.send(formData);
+            });
+            
+            // Return both promise and abort function
+            return {
+                promise: promise,
+                abort: () => {
+                    if (xhr) {
+                        xhr.abort();
+                    }
+                }
+            };
+            
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error uploading chunked file:`, error);
+            throw error;
+        }
+    },
+
     /**
      * Read a file's content
      * @param {string} filePath - Path to the file
@@ -2058,7 +2478,26 @@ Object.assign(SypnexAPI.prototype, {
             throw error;
         }
     },
-    
+
+    /**
+     * Get a file's content as Blob (for binary files, images, etc.)
+     * @param {string} filePath - Path to the file
+     * @returns {Promise<Blob>} - File content as Blob
+     */
+    async readVirtualFileBlob(filePath) {
+        try {
+            const fileUrl = this.getVirtualFileUrl(filePath);
+            const response = await fetch(fileUrl);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch binary file: ${response.status} ${response.statusText}`);
+            }
+            return await response.blob();
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error reading virtual file blob:`, error);
+            throw error;
+        }
+    },
+
     /**
      * Serve a file directly (for binary files, images, etc.)
      * @param {string} filePath - Path to the file
@@ -2066,9 +2505,7 @@ Object.assign(SypnexAPI.prototype, {
      */
     getVirtualFileUrl(filePath) {
         return `${this.baseUrl}/virtual-files/serve/${encodeURIComponent(filePath.substring(1))}`;
-    },
-    
-    /**
+    },    /**
      * Delete a file or directory
      * @param {string} itemPath - Path to the item to delete
      * @returns {Promise<object>} - Deletion result
@@ -2150,20 +2587,20 @@ Object.assign(SypnexAPI.prototype, {
      */
     async writeVirtualFile(filePath, content) {
         try {
-            // First check if file exists
-            const exists = await this.virtualItemExists(filePath);
+            const response = await fetch(`${this.baseUrl}/virtual-files/write${filePath}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content })
+            });
             
-            if (exists) {
-                // For now, we'll delete and recreate since we don't have a direct write endpoint
-                await this.deleteVirtualItem(filePath);
+            if (response.ok) {
+                return await response.json();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to write file: ${response.status}`);
             }
-            
-            // Extract name and parent path
-            const pathParts = filePath.split('/');
-            const name = pathParts.pop();
-            const parentPath = pathParts.length > 0 ? pathParts.join('/') || '/' : '/';
-            
-            return await this.createVirtualFile(name, content, parentPath);
         } catch (error) {
             console.error(`SypnexAPI [${this.appId}]: Error writing virtual file:`, error);
             throw error;
@@ -2182,6 +2619,58 @@ Object.assign(SypnexAPI.prototype, {
             return await this.writeVirtualFile(filePath, content);
         } catch (error) {
             console.error(`SypnexAPI [${this.appId}]: Error writing virtual file JSON:`, error);
+            throw error;
+        }
+    },
+    
+    /**
+     * Write binary content to a file using the upload endpoint
+     * @param {string} filePath - Path to the file
+     * @param {Uint8Array|Blob} binaryData - Binary data to write
+     * @returns {Promise<object>} - Write result
+     */
+    async writeVirtualFileBinary(filePath, binaryData) {
+        try {
+            // First check if file exists and delete it
+            const exists = await this.virtualItemExists(filePath);
+            if (exists) {
+                await this.deleteVirtualItem(filePath);
+            }
+            
+            // Extract name and parent path
+            const pathParts = filePath.split('/');
+            const fileName = pathParts.pop();
+            const parentPath = pathParts.length > 0 ? pathParts.join('/') || '/' : '/';
+            
+            // Create FormData for the upload
+            const formData = new FormData();
+            
+            // Convert Uint8Array to Blob if needed
+            let blob;
+            if (binaryData instanceof Uint8Array) {
+                blob = new Blob([binaryData], { type: 'application/octet-stream' });
+            } else if (binaryData instanceof Blob) {
+                blob = binaryData;
+            } else {
+                throw new Error('Binary data must be Uint8Array or Blob');
+            }
+            
+            formData.append('file', blob, fileName);
+            formData.append('parent_path', parentPath);
+            
+            const response = await fetch(`${this.baseUrl}/virtual-files/upload-file`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                return await response.json();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Failed to upload binary file: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`SypnexAPI [${this.appId}]: Error writing virtual file binary:`, error);
             throw error;
         }
     },
@@ -3054,39 +3543,6 @@ Object.assign(SypnexAPI.prototype, {
     
 }); 
 
-// === sypnex-api-terminal.js ===
-// SypnexAPI Terminal - Terminal command execution
-// This file extends the SypnexAPI class with terminal integration functionality
-
-// Extend SypnexAPI with terminal methods
-Object.assign(SypnexAPI.prototype, {
-    
-    /**
-     * Execute a terminal command
-     * @param {string} command - Command to execute
-     * @returns {Promise<object>} - Command execution result
-     */
-    async executeTerminalCommand(command) {
-        try {
-            const response = await fetch('/api/terminal/execute', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command: command })
-            });
-            
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('SypnexAPI: Error executing terminal command:', error);
-            return {
-                error: `Command execution failed: ${error.message}`,
-                success: false
-            };
-        }
-    }
-    
-}); 
-
 // === sypnex-api-logs.js ===
 // SypnexAPI Logs - Logging system operations
 // This file extends the SypnexAPI class with logging functionality
@@ -3550,7 +4006,7 @@ Object.assign(SypnexAPI.prototype, {
 Object.assign(SypnexAPI.prototype, {
     
     /**
-     * Proxy an HTTP request through the system
+     * Proxy an HTTP request through the system (tries direct CORS, falls back to proxy)
      * @async
      * @param {object} options - HTTP request options
      * @param {string} options.url - Target URL for the request
@@ -3559,9 +4015,159 @@ Object.assign(SypnexAPI.prototype, {
      * @param {*} [options.body] - Request body (will be JSON stringified if object)
      * @param {number} [options.timeout=30] - Request timeout in seconds
      * @param {boolean} [options.followRedirects=true] - Whether to follow redirects
-     * @returns {Promise<object>} - Proxy response data
+     * @param {boolean} [options.forceProxy=false] - Force use of backend proxy instead of direct CORS
+     * @returns {Promise<object>} - Response data in proxy format for compatibility
      */
     async proxyHTTP(options) {
+        const {
+            url,
+            method = 'GET',
+            headers = {},
+            body = null,
+            timeout = 30,
+            followRedirects = true,
+            forceProxy = false
+        } = options;
+        
+        if (!url) {
+            throw new Error('URL is required for HTTP proxy request');
+        }
+
+        // If forceProxy is true, skip direct CORS attempt
+        if (forceProxy) {
+            return await this._proxyThroughBackend(options);
+        }
+
+        // Try direct CORS first
+        try {
+            console.log(`SypnexAPI [${this.appId}]: Attempting direct CORS request to:`, url);
+            const result = await this._directCORSRequest(options);
+            console.log(`SypnexAPI [${this.appId}]: Direct CORS succeeded for:`, url);
+            return result;
+        } catch (corsError) {
+            // If CORS fails, fall back to backend proxy
+            console.log(`SypnexAPI [${this.appId}]: Direct CORS failed, falling back to proxy:`, corsError.message);
+            const result = await this._proxyThroughBackend(options);
+            console.log(`SypnexAPI [${this.appId}]: Backend proxy succeeded for:`, url);
+            return result;
+        }
+    },
+
+    /**
+     * Make a direct CORS request
+     * @private
+     */
+    async _directCORSRequest(options) {
+        const {
+            url,
+            method = 'GET',
+            headers = {},
+            body = null,
+            timeout = 30,
+            followRedirects = true
+        } = options;
+
+        // Create timeout controller
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout * 1000);
+        
+        try {
+            // Prepare fetch options
+            const fetchOptions = {
+                method: method.toUpperCase(),
+                headers: {
+                    ...headers
+                },
+                signal: controller.signal,
+                mode: 'cors',
+                credentials: 'omit',
+                redirect: followRedirects ? 'follow' : 'manual'
+            };
+            
+            // Handle body based on content type and data type
+            // Only add body for methods that support it
+            if (body !== null && body !== undefined && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
+                if (typeof body === 'object' && !(body instanceof FormData) && !(body instanceof ArrayBuffer) && !(body instanceof Blob)) {
+                    fetchOptions.body = JSON.stringify(body);
+                    // Ensure Content-Type is set for JSON
+                    if (!fetchOptions.headers['Content-Type'] && !fetchOptions.headers['content-type']) {
+                        fetchOptions.headers['Content-Type'] = 'application/json';
+                    }
+                } else {
+                    fetchOptions.body = body;
+                }
+            }
+            
+            const response = await fetch(url, fetchOptions);
+            clearTimeout(timeoutId);
+            
+            // Check for CORS failure - if response is not ok and type is 'opaque' or 'cors', it's likely a CORS issue
+            if (!response.ok && (response.type === 'opaque' || response.type === 'cors')) {
+                throw new Error(`CORS request failed with status ${response.status}`);
+            }
+            
+            // Also check if response is completely empty (another CORS indicator)
+            if (response.status === 0) {
+                throw new Error('Network request failed - likely CORS issue');
+            }
+            
+            // Check if response is binary based on content-type
+            const contentType = response.headers.get('content-type') || '';
+            const isBinary = contentType.includes('audio/') || 
+                            contentType.includes('video/') || 
+                            contentType.includes('image/') ||
+                            contentType.includes('application/octet-stream') ||
+                            contentType.includes('application/pdf');
+            
+            let content;
+            if (isBinary) {
+                // Handle binary response as base64
+                const arrayBuffer = await response.arrayBuffer();
+                const bytes = new Uint8Array(arrayBuffer);
+                let binary = '';
+                for (let i = 0; i < bytes.byteLength; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                content = btoa(binary);
+            } else {
+                // Handle text response
+                content = await response.text();
+                
+                // Try to parse as JSON if content-type suggests it
+                if (contentType.includes('application/json')) {
+                    try {
+                        content = JSON.parse(content);
+                    } catch (e) {
+                        // Keep as text if JSON parsing fails
+                    }
+                }
+            }
+            
+            // Return response in the same format as the old proxy
+            return {
+                status: response.status,
+                content: content,
+                is_binary: isBinary,
+                headers: Object.fromEntries(response.headers.entries())
+            };
+            
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            
+            if (fetchError.name === 'AbortError') {
+                throw new Error(`Request timeout after ${timeout} seconds`);
+            }
+            
+            // Let CORS errors bubble up so they can trigger fallback
+            throw fetchError;
+        }
+    },
+
+    /**
+     * Make a request through the backend proxy
+     * @private
+     */
+    async _proxyThroughBackend(options) {
         try {
             const {
                 url,
@@ -3571,10 +4177,6 @@ Object.assign(SypnexAPI.prototype, {
                 timeout = 30,
                 followRedirects = true
             } = options;
-            
-            if (!url) {
-                throw new Error('URL is required for HTTP proxy request');
-            }
             
             const proxyRequest = {
                 url,
@@ -3588,7 +4190,6 @@ Object.assign(SypnexAPI.prototype, {
             if (body !== null && body !== undefined) {
                 proxyRequest.body = body;
             }
-            
             
             const response = await fetch(`${this.baseUrl}/proxy/http`, {
                 method: 'POST',
@@ -3606,8 +4207,14 @@ Object.assign(SypnexAPI.prototype, {
                 throw new Error(errorData.error || `Proxy request failed: ${response.status}`);
             }
         } catch (error) {
-            console.error(`SypnexAPI [${this.appId}]: Error in HTTP proxy request:`, error);
-            throw error;
+            console.error(`SypnexAPI [${this.appId}]: Error in backend proxy request:`, error);
+            // Return error in proxy format for compatibility
+            return {
+                status: 0,
+                error: error.message,
+                content: null,
+                is_binary: false
+            };
         }
     },
     
