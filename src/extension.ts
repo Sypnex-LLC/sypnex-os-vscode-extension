@@ -545,6 +545,18 @@ const sypnexApiMethods = [
 		isAsync: false
 	},
 	{
+		name: 'encrypt',
+		signature: 'encrypt(value: any): Promise<any>',
+		description: 'encrypt method from Sypnex API',
+		isAsync: true
+	},
+	{
+		name: 'decrypt',
+		signature: 'decrypt(encryptedValue: any): Promise<any>',
+		description: 'decrypt method from Sypnex API',
+		isAsync: true
+	},
+	{
 		name: 'media',
 		signature: 'media(max-width: 768px: any): any',
 		description: 'media method from Sypnex API',

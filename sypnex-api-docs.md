@@ -662,6 +662,16 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Returns:** any
 - **Usage:** `sypnexAPI.scaling()`
 
+### `encrypt(value)`
+- **Description:** encrypt method from Sypnex API
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.encrypt(value)`
+
+### `decrypt(encryptedValue)`
+- **Description:** decrypt method from Sypnex API
+- **Returns:** Promise
+- **Usage:** `await sypnexAPI.decrypt(encryptedValue)`
+
 ### `media(max-width: 768px)`
 - **Description:** media method from Sypnex API
 - **Returns:** any

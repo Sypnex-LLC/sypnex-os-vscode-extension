@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-03 23:24:22.072751
+// Generated: 2025-08-08 18:29:59.773756
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -240,7 +240,7 @@ if (typeof window !== 'undefined' && window.fetch && !window._sypnexFetchOverrid
         }
         
         // Add access token header to all fetch requests
-        options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJfZDdmYjJlOGNfZTZjMyIsImNyZWF0ZWRfYXQiOjE3NTQyNTc5MzEuMTQzOTIxNCwiZXhwIjoxNzU0MzQ0MzMxLjE0MzkyMTksImlzcyI6ImNicWJ6NmlqNHM2OWp5aXoiLCJpYXQiOjE3NTQyNTc5MzEuMTQzOTI1N30.f5NDdJalm0UkKrrdfdUYVviT0zlCEfHnuXlpxOXpmuI';
+        options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJjcmVhdGVkX2F0IjoxNzU0Njc1MDQ3LjczMDI1NzcsImV4cCI6MTc1NDc2MTQ0Ny43MzAyNTc3LCJpc3MiOiJ5b3VyLWluc3RhbmNlLW5hbWUiLCJpYXQiOjE3NTQ2NzUwNDcuNzMwMjU3N30.2il8qK3MrTBFq3en-8PmPo4hQFneyqmnGiMYD9BDLzs';
         
         // Call original fetch with modified options
         return originalFetch(url, options);
@@ -1690,6 +1690,69 @@ Object.assign(SypnexAPI.prototype, {
     }
     
 }); 
+
+// === sypnex-api-crypto.js ===
+// SypnexAPI Crypto - Simple encryption/decryption for user applications
+// Extends SypnexAPI with basic crypto methods
+
+Object.assign(SypnexAPI.prototype, {
+    async encrypt(value) {
+        try {
+            const response = await fetch(`${this.baseUrl}/crypto/encrypt`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ value })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    return data.encrypted;
+                } else {
+                    console.error('SypnexAPI: Encryption failed:', data.error);
+                    return null;
+                }
+            } else {
+                console.error('SypnexAPI: Encryption request failed:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('SypnexAPI: Error encrypting value:', error);
+            return null;
+        }
+    },
+    
+    async decrypt(encryptedValue) {
+        try {
+            const response = await fetch(`${this.baseUrl}/crypto/decrypt`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ encrypted: encryptedValue })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    return data.value;
+                } else {
+                    console.error('SypnexAPI: Decryption failed:', data.error);
+                    return null;
+                }
+            } else {
+                console.error('SypnexAPI: Decryption request failed:', response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error('SypnexAPI: Error decrypting value:', error);
+            return null;
+        }
+    }
+});
+
 
 // === sypnex-api-socket.js ===
 // SypnexAPI Socket - WebSocket communication
