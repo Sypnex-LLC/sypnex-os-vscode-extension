@@ -82,6 +82,59 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 -  {HTMLElement} container - The container element to append the menu to
 -  {Array} menuItems - Array of menu item objects
 
+### `registerApp(appId, shortcuts, config)`
+- **Description:** Handle global keydown events and route to active application
+- **Returns:** any
+- **Usage:** `sypnexAPI.registerApp(appId, shortcuts, config)`
+
+**Parameters:**
+-  {KeyboardEvent} event - The keyboard event
+-  {KeyboardEvent} event - The keyboard event
+-  {string} appId - Application identifier
+-  {object} shortcuts - Key to function mappings
+-  {object} config - Configuration options
+
+### `unregisterApp(appId)`
+- **Description:** Unregister all shortcuts for an application
+- **Returns:** any
+- **Usage:** `sypnexAPI.unregisterApp(appId)`
+
+**Parameters:**
+-  {string} appId - Application identifier
+
+### `getStats()`
+- **Description:** Get statistics about registered shortcuts
+- **Returns:** any
+- **Usage:** `sypnexAPI.getStats()`
+
+### `registerKeyboardShortcuts(shortcuts, config = {})`
+- **Description:** Register keyboard shortcuts for this application
+- **Returns:** any
+- **Usage:** `sypnexAPI.registerKeyboardShortcuts(shortcuts, config = {})`
+
+**Parameters:**
+-  {object} shortcuts - Object mapping key strings to handler functions
+-  {object} config - Configuration options
+
+### `getKeyboardStats()`
+- **Description:** Get keyboard shortcut statistics
+- **Returns:** any
+- **Usage:** `sypnexAPI.getKeyboardStats()`
+
+### `getAppWindow()`
+- **Description:** Create an isolated window proxy for an app with automatic property tracking
+- **Returns:** any
+- **Usage:** `sypnexAPI.getAppWindow()`
+
+**Parameters:**
+-  {string} appId - The application ID
+-  {string} appId - The application ID to clean up
+
+### `cleanupAppWindow()`
+- **Description:** Manually clean up window properties for this app
+- **Returns:** any
+- **Usage:** `sypnexAPI.cleanupAppWindow()`
+
 ### `detectAppScale()`
 - **Description:** Scaling utilities for handling app scaling across all user applications
 - **Returns:** any
@@ -650,12 +703,35 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 **Parameters:**
 -  {string} url - Target URL
 
-### `forEach(item => {
-            if (item.type === 'separator')`
-- **Description:** forEach method from Sypnex API
+### `handleGlobalKeydown(event)`
+- **Description:** handleGlobalKeydown method from Sypnex API
 - **Returns:** any
-- **Usage:** `sypnexAPI.forEach(item => {
-            if (item.type === 'separator')`
+- **Usage:** `sypnexAPI.handleGlobalKeydown(event)`
+
+### `eventToKeyString(event)`
+- **Description:** eventToKeyString method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.eventToKeyString(event)`
+
+### `initKeyboardManager()`
+- **Description:** initKeyboardManager method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.initKeyboardManager()`
+
+### `createAppWindowProxy(appId)`
+- **Description:** createAppWindowProxy method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.createAppWindowProxy(appId)`
+
+### `deleteProperty(target, property)`
+- **Description:** deleteProperty method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.deleteProperty(target, property)`
+
+### `initializeWindowManager()`
+- **Description:** initializeWindowManager method from Sypnex API
+- **Returns:** any
+- **Usage:** `sypnexAPI.initializeWindowManager()`
 
 ### `scaling()`
 - **Description:** scaling method from Sypnex API
@@ -671,11 +747,6 @@ Simply use `sypnexAPI.methodName()` - no imports or instantiation needed.
 - **Description:** decrypt method from Sypnex API
 - **Returns:** Promise
 - **Usage:** `await sypnexAPI.decrypt(encryptedValue)`
-
-### `media(max-width: 768px)`
-- **Description:** media method from Sypnex API
-- **Returns:** any
-- **Usage:** `sypnexAPI.media(max-width: 768px)`
 
 ### `loadDirectory(path, isRefresh = false)`
 - **Description:** loadDirectory method from Sypnex API

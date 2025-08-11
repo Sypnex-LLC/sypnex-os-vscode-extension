@@ -71,6 +71,48 @@ const sypnexApiMethods = [
 		isAsync: false
 	},
 	{
+		name: 'registerApp',
+		signature: 'registerApp(appId: any, shortcuts: any, config: any): any',
+		description: 'Handle global keydown events and route to active application',
+		isAsync: false
+	},
+	{
+		name: 'unregisterApp',
+		signature: 'unregisterApp(appId: any): any',
+		description: 'Unregister all shortcuts for an application',
+		isAsync: false
+	},
+	{
+		name: 'getStats',
+		signature: 'getStats(): any',
+		description: 'Get statistics about registered shortcuts',
+		isAsync: false
+	},
+	{
+		name: 'registerKeyboardShortcuts',
+		signature: 'registerKeyboardShortcuts(shortcuts: any, config?: any): any',
+		description: 'Register keyboard shortcuts for this application',
+		isAsync: false
+	},
+	{
+		name: 'getKeyboardStats',
+		signature: 'getKeyboardStats(): any',
+		description: 'Get keyboard shortcut statistics',
+		isAsync: false
+	},
+	{
+		name: 'getAppWindow',
+		signature: 'getAppWindow(): any',
+		description: 'Create an isolated window proxy for an app with automatic property tracking',
+		isAsync: false
+	},
+	{
+		name: 'cleanupAppWindow',
+		signature: 'cleanupAppWindow(): any',
+		description: 'Manually clean up window properties for this app',
+		isAsync: false
+	},
+	{
 		name: 'detectAppScale',
 		signature: 'detectAppScale(): any',
 		description: 'Scaling utilities for handling app scaling across all user applications',
@@ -533,9 +575,39 @@ const sypnexApiMethods = [
 		isAsync: true
 	},
 	{
-		name: 'forEach',
-		signature: 'forEach(item?: any): any',
-		description: 'forEach method from Sypnex API',
+		name: 'handleGlobalKeydown',
+		signature: 'handleGlobalKeydown(event: any): any',
+		description: 'handleGlobalKeydown method from Sypnex API',
+		isAsync: false
+	},
+	{
+		name: 'eventToKeyString',
+		signature: 'eventToKeyString(event: any): any',
+		description: 'eventToKeyString method from Sypnex API',
+		isAsync: false
+	},
+	{
+		name: 'initKeyboardManager',
+		signature: 'initKeyboardManager(): any',
+		description: 'initKeyboardManager method from Sypnex API',
+		isAsync: false
+	},
+	{
+		name: 'createAppWindowProxy',
+		signature: 'createAppWindowProxy(appId: any): any',
+		description: 'createAppWindowProxy method from Sypnex API',
+		isAsync: false
+	},
+	{
+		name: 'deleteProperty',
+		signature: 'deleteProperty(target: any, property: any): any',
+		description: 'deleteProperty method from Sypnex API',
+		isAsync: false
+	},
+	{
+		name: 'initializeWindowManager',
+		signature: 'initializeWindowManager(): any',
+		description: 'initializeWindowManager method from Sypnex API',
 		isAsync: false
 	},
 	{
@@ -555,12 +627,6 @@ const sypnexApiMethods = [
 		signature: 'decrypt(encryptedValue: any): Promise<any>',
 		description: 'decrypt method from Sypnex API',
 		isAsync: true
-	},
-	{
-		name: 'media',
-		signature: 'media(max-width: 768px: any): any',
-		description: 'media method from Sypnex API',
-		isAsync: false
 	},
 	{
 		name: 'loadDirectory',

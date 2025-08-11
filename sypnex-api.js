@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-08 18:29:59.773756
+// Generated: 2025-08-11 15:10:46.234485
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -240,7 +240,7 @@ if (typeof window !== 'undefined' && window.fetch && !window._sypnexFetchOverrid
         }
         
         // Add access token header to all fetch requests
-        options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJjcmVhdGVkX2F0IjoxNzU0Njc1MDQ3LjczMDI1NzcsImV4cCI6MTc1NDc2MTQ0Ny43MzAyNTc3LCJpc3MiOiJ5b3VyLWluc3RhbmNlLW5hbWUiLCJpYXQiOjE3NTQ2NzUwNDcuNzMwMjU3N30.2il8qK3MrTBFq3en-8PmPo4hQFneyqmnGiMYD9BDLzs';
+        options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJjcmVhdGVkX2F0IjoxNzU0ODc5ODYxLjAyMzkwNjIsImV4cCI6MTc1NDk2NjI2MS4wMjM5MDYyLCJpc3MiOiJ5b3VyLWluc3RhbmNlLW5hbWUiLCJpYXQiOjE3NTQ4Nzk4NjEuMDIzOTA2Mn0.oRmx2pH-VRl7irf7Coo9Qs3gOQVMg-26dFB42_ybYpE';
         
         // Call original fetch with modified options
         return originalFetch(url, options);
@@ -1264,6 +1264,446 @@ Object.assign(SypnexAPI.prototype, {
 
 
 });
+
+// === sypnex-api-keyboard.js ===
+// SypnexAPI Keyboard Management - Global keyboard shortcut system
+// This file extends the SypnexAPI class with keyboard shortcut functionality
+
+// Global keyboard manager (initialized once)
+(function() {
+    // Skip if already initialized
+    if (window.sypnexKeyboardManager) return;
+    
+    // Private global state for keyboard management
+    const keyboardState = {
+        appShortcuts: new Map(), // appId -> {shortcuts, config}
+        isInitialized: false
+    };
+    
+    /**
+     * Handle global keydown events and route to active application
+     * @param {KeyboardEvent} event - The keyboard event
+     */
+    function handleGlobalKeydown(event) {
+        // Use the OS's existing activeWindow tracking
+        const activeAppId = window.sypnexOS && window.sypnexOS.activeWindow;
+        
+        // Only process if we have an active app that has shortcuts registered
+        if (!activeAppId || !keyboardState.appShortcuts.has(activeAppId)) return;
+        
+        // Check if the active app is minimized - if so, don't process shortcuts
+        const activeWindowElement = window.sypnexOS.apps && window.sypnexOS.apps.get(activeAppId);
+        if (activeWindowElement && activeWindowElement.dataset.minimized === 'true') {
+            return; // App is minimized, ignore keyboard shortcuts
+        }
+        
+        // Get the active app's shortcuts
+        const appConfig = keyboardState.appShortcuts.get(activeAppId);
+        
+        // Convert event to key string (e.g., "f", "ctrl+s", "ArrowLeft")
+        const keyString = eventToKeyString(event);
+        
+        // Check if this key is registered for the active app
+        const handler = appConfig.shortcuts[keyString];
+        if (handler && typeof handler === 'function') {
+            // Prevent default if configured to do so
+            if (appConfig.config.preventDefault !== false) {
+                event.preventDefault();
+            }
+            
+            // Stop propagation if configured
+            if (appConfig.config.stopPropagation) {
+                event.stopPropagation();
+            }
+            
+            try {
+                // Call the handler
+                handler();
+            } catch (error) {
+                console.error(`SypnexKeyboardManager: Error executing shortcut "${keyString}" for app ${activeAppId}:`, error);
+            }
+        }
+        // If no handler found, do nothing - let the event continue normally
+    }
+    
+    /**
+     * Convert keyboard event to standardized key string
+     * @param {KeyboardEvent} event - The keyboard event
+     * @returns {string} Standardized key string
+     */
+    function eventToKeyString(event) {
+        const parts = [];
+        
+        // Add modifiers in consistent order
+        if (event.ctrlKey) parts.push('ctrl');
+        if (event.altKey) parts.push('alt');
+        if (event.shiftKey) parts.push('shift');
+        if (event.metaKey) parts.push('meta');
+        
+        // Add the main key
+        let key = event.key.toLowerCase();
+        
+        // Normalize some special keys
+        if (key === ' ') key = 'space';
+        if (key === 'escape') key = 'escape';
+        if (key.startsWith('arrow')) key = key; // Keep ArrowLeft, ArrowRight, etc.
+        
+        parts.push(key);
+        
+        return parts.join('+');
+    }
+    
+    // Initialize keyboard manager
+    function initKeyboardManager() {
+        if (keyboardState.isInitialized) return;
+        
+        // Single global listener for all keyboard events
+        document.addEventListener('keydown', handleGlobalKeydown);
+        keyboardState.isInitialized = true;
+        
+        console.log('SypnexKeyboardManager: Initialized global keyboard manager');
+    }
+    
+    // Expose keyboard manager functions globally
+    window.sypnexKeyboardManager = {
+        /**
+         * Register keyboard shortcuts for an application
+         * @param {string} appId - Application identifier
+         * @param {object} shortcuts - Key to function mappings
+         * @param {object} config - Configuration options
+         */
+        registerApp(appId, shortcuts, config) {
+            keyboardState.appShortcuts.set(appId, {shortcuts, config});
+            console.log(`SypnexKeyboardManager: Registered ${Object.keys(shortcuts).length} shortcuts for app ${appId}`);
+        },
+        
+        /**
+         * Unregister all shortcuts for an application
+         * @param {string} appId - Application identifier
+         */
+        unregisterApp(appId) {
+            const appConfig = keyboardState.appShortcuts.get(appId);
+            if (appConfig) {
+                const shortcutCount = Object.keys(appConfig.shortcuts).length;
+                keyboardState.appShortcuts.delete(appId);
+                console.log(`SypnexKeyboardManager: Unregistered ${shortcutCount} shortcuts for app ${appId}`);
+                return shortcutCount;
+            }
+            return 0;
+        },
+        
+        /**
+         * Get statistics about registered shortcuts
+         * @returns {object} Statistics object
+         */
+        getStats() {
+            const totalShortcuts = Array.from(keyboardState.appShortcuts.values())
+                .reduce((total, config) => total + Object.keys(config.shortcuts).length, 0);
+                
+            const activeAppId = window.sypnexOS && window.sypnexOS.activeWindow;
+            
+            return {
+                registeredApps: keyboardState.appShortcuts.size,
+                totalShortcuts: totalShortcuts,
+                activeApp: activeAppId
+            };
+        }
+    };
+    
+    // Initialize on load
+    initKeyboardManager();
+})();
+
+// Extend SypnexAPI with keyboard shortcut methods
+Object.assign(SypnexAPI.prototype, {
+    
+    /**
+     * Register keyboard shortcuts for this application
+     * @param {object} shortcuts - Object mapping key strings to handler functions
+     * @param {object} config - Configuration options
+     * @param {boolean} config.preventDefault - Whether to prevent default behavior (default: true)
+     * @param {boolean} config.stopPropagation - Whether to stop event propagation (default: false)
+     * @example
+     * this.registerKeyboardShortcuts({
+     *     'f': () => this.toggleFullscreen(),
+     *     'escape': () => this.exitFullscreen(),
+     *     'space': () => this.pausePlay(),
+     *     'ctrl+s': () => this.save()
+     * });
+     */
+    registerKeyboardShortcuts(shortcuts, config = {}) {
+        const appId = this.appId;
+        if (!appId) {
+            console.warn('SypnexAPI: Cannot register keyboard shortcuts - no appId available');
+            return;
+        }
+        
+        // Default configuration
+        const defaultConfig = {
+            preventDefault: true,
+            stopPropagation: false
+        };
+        
+        const finalConfig = Object.assign({}, defaultConfig, config);
+        
+        // Register with the global keyboard manager
+        window.sypnexKeyboardManager.registerApp(appId, shortcuts, finalConfig);
+        
+        // Track in sandbox for cleanup
+        if (window.appKeyboardShortcuts) {
+            window.appKeyboardShortcuts.set(appId, Object.keys(shortcuts));
+        }
+        
+        console.log('SypnexAPI: Registered ' + Object.keys(shortcuts).length + ' keyboard shortcuts for app ' + appId);
+    },
+    
+    /**
+     * Get keyboard shortcut statistics
+     * @returns {object} Statistics about registered shortcuts
+     */
+    getKeyboardStats() {
+        return window.sypnexKeyboardManager.getStats();
+    }
+});
+
+
+// === sypnex-api-window.js ===
+// SypnexAPI Window Management - Explicit window object management for sandboxed apps
+// This file extends the SypnexAPI class with createAppWindow functionality
+
+// Global window manager (initialized once)
+(function() {
+    // Skip if already initialized
+    if (window.sypnexWindowManager) return;
+    
+    // Private global state for window management
+    const windowState = {
+        appWindows: new Map(), // appId -> {windowProxy, properties: Set}
+        isInitialized: false
+    };
+    
+    /**
+     * Create an isolated window proxy for an app with automatic property tracking
+     * @param {string} appId - The application ID
+     * @returns {Object} Proxy object that tracks property assignments
+     */
+    function createAppWindowProxy(appId) {
+        // Check if we already have a proxy for this app
+        if (windowState.appWindows.has(appId)) {
+            const existingData = windowState.appWindows.get(appId);
+            if (existingData.windowProxy) {
+                // Return the existing proxy
+                return existingData.windowProxy;
+            }
+        }
+        
+        // Create a Set to track properties created by this app
+        const appProperties = new Set();
+        
+        // Store the tracking set for cleanup later
+        if (!windowState.appWindows.has(appId)) {
+            windowState.appWindows.set(appId, {
+                windowProxy: null,
+                properties: appProperties
+            });
+        } else {
+            windowState.appWindows.get(appId).properties = appProperties;
+        }
+        
+        // Methods that need to be bound to the real window object
+        const boundMethods = new Set([
+            // DOM/CSS methods
+            'getComputedStyle',
+            'getSelection',
+            'matchMedia',
+            
+            // Animation/timing methods
+            'requestAnimationFrame',
+            'cancelAnimationFrame',
+            'requestIdleCallback',
+            'cancelIdleCallback',
+            
+            // Scrolling methods
+            'scrollTo',
+            'scroll',
+            'scrollBy',
+            
+            // Window manipulation methods
+            'resizeTo',
+            'resizeBy',
+            'moveTo',
+            'moveBy',
+            
+            // Additional common methods that need proper binding
+            'alert',              // Alert dialogs
+            'confirm',            // Confirmation dialogs
+            'prompt',             // Input prompts
+            'print',              // Print page
+            'focus',              // Window focus
+            'blur',               // Window blur
+            'find',               // Text search (legacy)
+            'stop',               // Stop page loading
+            'atob',               // Base64 decode
+            'btoa'                // Base64 encode
+        ]);
+
+        // Create a proxy that intercepts property assignments
+        const windowProxy = new Proxy(window, {
+            set(target, property, value) {
+                // Track this property assignment
+                appProperties.add(property);
+                
+                // Log the assignment for debugging
+                console.log(`App ${appId}: Tracked window.${property} assignment through createAppWindow()`);
+                
+                // Set the property on the real window object
+                target[property] = value;
+                return true;
+            },
+            
+            get(target, property) {
+                const value = target[property];
+                
+                // If it's a method that needs to be bound to the real window, bind it
+                if (typeof value === 'function' && boundMethods.has(property)) {
+                    return value.bind(target);
+                }
+                
+                // Return the actual property from window
+                return value;
+            },
+            
+            has(target, property) {
+                return property in target;
+            },
+            
+            deleteProperty(target, property) {
+                // If this app created this property, remove it from tracking
+                appProperties.delete(property);
+                delete target[property];
+                return true;
+            }
+        });
+        
+        // Store the proxy for later reference
+        windowState.appWindows.get(appId).windowProxy = windowProxy;
+        
+        return windowProxy;
+    }
+    
+    /**
+     * Clean up all window properties created by a specific app
+     * @param {string} appId - The application ID to clean up
+     */
+    function cleanupAppWindow(appId) {
+        const appData = windowState.appWindows.get(appId);
+        if (!appData) return;
+        
+        const { properties } = appData;
+        let cleanedCount = 0;
+        
+        // Delete all properties that this app created
+        for (const property of properties) {
+            if (property in window) {
+                try {
+                    delete window[property];
+                    cleanedCount++;
+                    
+                    console.log(`App ${appId}: Cleaned up window.${property}`);
+                } catch (error) {
+                    console.warn(`App ${appId}: Failed to clean up window.${property}:`, error);
+                }
+            }
+        }
+        
+        // Clear the tracking data
+        properties.clear();
+        windowState.appWindows.delete(appId);
+        
+        if (cleanedCount > 0) {
+            console.log(`App ${appId}: Cleaned up ${cleanedCount} window properties`);
+        }
+    }
+    
+    /**
+     * Initialize the window management system
+     */
+    function initializeWindowManager() {
+        if (windowState.isInitialized) return;
+        
+        // Hook into the existing app cleanup system
+        if (window.sypnexAppSandbox && window.sypnexAppSandbox.addCleanupHook) {
+            window.sypnexAppSandbox.addCleanupHook('window-management', (appId) => {
+                cleanupAppWindow(appId);
+            });
+        }
+        
+        windowState.isInitialized = true;
+        
+        console.log('SypnexWindowManager: Initialized global window manager');
+    }
+    
+    // Initialize immediately
+    initializeWindowManager();
+    
+    // Make the window manager globally available
+    window.sypnexWindowManager = {
+        createAppWindowProxy,
+        cleanupAppWindow,
+        state: windowState // For debugging
+    };
+})();
+
+// Extend SypnexAPI with window management methods
+Object.assign(SypnexAPI.prototype, {
+
+    /**
+     * Get the isolated window object for this app with automatic property tracking
+     * Returns the same window proxy instance for subsequent calls (singleton pattern).
+     * All properties assigned to this window proxy will be automatically cleaned up
+     * when the app is closed, preventing memory leaks and conflicts.
+     * 
+     * @returns {Object} Window proxy object that tracks property assignments
+     * 
+     * @example
+     * // Instead of: window.myData = { ... }
+     * // Use:
+     * const appWindow = sypnexAPI.getAppWindow();
+     * appWindow.myData = { ... }; // This will be automatically cleaned up
+     * 
+     * // Multiple calls return the same proxy:
+     * const w1 = sypnexAPI.getAppWindow();
+     * const w2 = sypnexAPI.getAppWindow();
+     * console.log(w1 === w2); // true
+     * 
+     * // The proxy behaves exactly like window for reading:
+     * appWindow.document.getElementById('myId'); // Works normally
+     * appWindow.localStorage.getItem('key');    // Works normally
+     */
+    getAppWindow() {
+        if (!window.sypnexWindowManager) {
+            console.error('SypnexAPI: Window manager not initialized');
+            return window; // Fallback to regular window
+        }
+        
+        return window.sypnexWindowManager.createAppWindowProxy(this.appId);
+    },
+    
+    /**
+     * Manually clean up window properties for this app
+     * This is automatically called when the app closes, but can be called manually if needed
+     */
+    cleanupAppWindow() {
+        if (!window.sypnexWindowManager) {
+            console.warn('SypnexAPI: Window manager not initialized');
+            return;
+        }
+        
+        window.sypnexWindowManager.cleanupAppWindow(this.appId);
+    }
+
+});
+
 
 // === sypnex-api-scaling.js ===
 // SypnexAPI Scaling - Centralized scaling utilities for all apps

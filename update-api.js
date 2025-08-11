@@ -44,7 +44,7 @@ function extractMethodsFromApi(apiContent) {
         if (methodName && 
             !methodName.startsWith('_') && 
             methodName !== 'constructor' &&
-            !['if', 'for', 'while', 'catch', 'try', 'switch', 'function', 'const', 'let', 'var', 'return', 'not', 'assign'].includes(methodName) &&
+            !['if', 'for', 'while', 'catch', 'try', 'switch', 'function', 'const', 'let', 'var', 'return', 'not', 'assign', 'forEach', 'map', 'filter', 'reduce', 'find', 'some', 'every', 'media', 'set', 'get', 'has', 'delete'].includes(methodName) &&
             /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(methodName) &&  // Valid JavaScript identifier
             !methods.some(m => m.name === methodName)) {  // Avoid duplicates
             
@@ -90,7 +90,7 @@ function extractMethodsFromApi(apiContent) {
             if (methodName && 
                 !methodName.startsWith('_') && 
                 methodName !== 'constructor' &&
-                !['if', 'for', 'while', 'catch', 'try', 'switch', 'function', 'const', 'let', 'var', 'return', 'not', 'assign'].includes(methodName) &&
+                !['if', 'for', 'while', 'catch', 'try', 'switch', 'function', 'const', 'let', 'var', 'return', 'not', 'assign', 'forEach', 'map', 'filter', 'reduce', 'find', 'some', 'every', 'media', 'set', 'get', 'has', 'delete'].includes(methodName) &&
                 /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(methodName) &&  // Valid JavaScript identifier
                 !methods.some(m => m.name === methodName)) {  // Avoid duplicates
                 
