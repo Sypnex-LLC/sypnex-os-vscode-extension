@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-15 03:12:29.457586
+// Generated: 2025-08-15 04:10:31.519287
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -2204,6 +2204,17 @@ Object.assign(SypnexAPI.prototype, {
 // Extends SypnexAPI with basic crypto methods
 
 Object.assign(SypnexAPI.prototype, {
+    /**
+     * Encrypt a value using the system's encryption service
+     * @param {string|object} value - The value to encrypt (will be JSON.stringify'd if object)
+     * @returns {Promise<string|null>} The encrypted value as a string, or null if encryption failed
+     * @example
+     * // Encrypt a simple string
+     * const encrypted = await sypnexAPI.encrypt("my secret data");
+     * 
+     * // Encrypt an object
+     * const encryptedObj = await sypnexAPI.encrypt({username: "john", password: "secret"});
+     */
     async encrypt(value) {
         try {
             const response = await fetch(`${this.baseUrl}/crypto/encrypt`, {
@@ -2232,6 +2243,19 @@ Object.assign(SypnexAPI.prototype, {
         }
     },
     
+    /**
+     * Decrypt a value that was previously encrypted with the encrypt() method
+     * @param {string} encryptedValue - The encrypted value to decrypt
+     * @returns {Promise<string|null>} The decrypted value, or null if decryption failed
+     * @example
+     * // Decrypt a previously encrypted value
+     * const decrypted = await sypnexAPI.decrypt(encryptedValue);
+     * 
+     * // Handle decryption failure
+     * if (decrypted === null) {
+     *     console.error("Failed to decrypt value");
+     * }
+     */
     async decrypt(encryptedValue) {
         try {
             const response = await fetch(`${this.baseUrl}/crypto/decrypt`, {
