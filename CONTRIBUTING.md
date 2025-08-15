@@ -31,28 +31,6 @@ This VS Code extension is part of the Sypnex OS ecosystem:
    ```
 4. Press F5 to launch the extension in a new Extension Development Host window
 
-## Contributing Areas
-
-### API Coverage
-- Adding new SypnexAPI methods to autocomplete
-- Improving method documentation and signatures
-- Adding parameter hints and return type information
-
-### Extension Features
-- Better error handling and validation
-- Code snippets for common app patterns
-- Enhanced hover documentation
-
-### Developer Experience
-- Improved IntelliSense accuracy
-- Better integration with VS Code features
-- Performance optimizations
-
-### Testing
-- Unit tests for extension functionality
-- Integration tests with VS Code
-- Testing across different VS Code versions
-
 ## Development Workflow
 
 1. Create a branch for your feature:
