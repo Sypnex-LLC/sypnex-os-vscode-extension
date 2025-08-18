@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-15 04:10:31.519287
+// Generated: 2025-08-18 06:43:06.918098
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -106,6 +106,28 @@ class SypnexAPI {
         if (type === 'error') {
             console.error(message);
         }
+    }
+    
+    /**
+     * Get access to the global SypnexOS apps registry
+     * @returns {Object} - The window.sypnexOS object containing apps Map and other OS functions
+     */
+    getSypnexOS() {
+        if (typeof window !== 'undefined' && window.sypnexOS) {
+            return window.sypnexOS;
+        }
+        return null;
+    }
+
+    /**
+     * Get access to the global SypnexApps tracker
+     * @returns {Object} - The window.sypnexApps object containing app tracking info
+     */
+    getSypnexApps() {
+        if (typeof window !== 'undefined' && window.sypnexApps) {
+            return window.sypnexApps;
+        }
+        return null;
     }
     
     /**
@@ -218,6 +240,94 @@ class SypnexAPI {
         }
     }
 
+    // ========================================
+    // SERVICE MANAGEMENT API METHODS
+    // ========================================
+
+    /**
+     * Get a list of all available services
+     * @async
+     * @returns {Promise<Array>} Array of service objects
+     * @throws {Error} If the request fails
+     * @example
+     * const services = await sypnexAPI.getServices();
+     * console.log(services); // [{ id: "service1", name: "Service 1", running: true }, ...]
+     */
+    async getServices() {
+        const response = await this.proxyHTTP({
+            url: '/api/services',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response || response.status < 200 || response.status >= 300) {
+            throw new Error(`Request failed with status: ${response?.status || 'Unknown'}`);
+        }
+
+        if (response.error) {
+            throw new Error(response.error);
+        }
+
+        const data = response.content;
+        return data.services || [];
+    }
+
+    /**
+     * Start a specific service by ID
+     * @async
+     * @param {string} serviceId - The ID of the service to start
+     * @returns {Promise<void>}
+     * @throws {Error} If the request fails
+     * @example
+     * await sypnexAPI.startService("my-service-id");
+     */
+    async startService(serviceId) {
+        const response = await this.proxyHTTP({
+            url: `/api/services/${serviceId}/start`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response || response.status < 200 || response.status >= 300) {
+            throw new Error(`Request failed with status: ${response?.status || 'Unknown'}`);
+        }
+
+        if (response.error) {
+            throw new Error(response.error);
+        }
+    }
+
+    /**
+     * Stop a specific service by ID
+     * @async
+     * @param {string} serviceId - The ID of the service to stop
+     * @returns {Promise<void>}
+     * @throws {Error} If the request fails
+     * @example
+     * await sypnexAPI.stopService("my-service-id");
+     */
+    async stopService(serviceId) {
+        const response = await this.proxyHTTP({
+            url: `/api/services/${serviceId}/stop`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response || response.status < 200 || response.status >= 300) {
+            throw new Error(`Request failed with status: ${response?.status || 'Unknown'}`);
+        }
+
+        if (response.error) {
+            throw new Error(response.error);
+        }
+    }
+
     /**
      * Register a cleanup function to be called when the app is closed
      * Use this for custom cleanup like stopping game loops, disposing WebGL contexts, etc.
@@ -276,7 +386,6 @@ class SypnexAPI {
             return;
         }
 
-        console.log(`SypnexAPI [${this.appId}]: Running ${this.cleanupHooks.length} cleanup hook(s)`);
         
         for (const hook of this.cleanupHooks) {
             try {
@@ -315,7 +424,7 @@ if (typeof window !== 'undefined' && window.fetch && !window._sypnexFetchOverrid
         // Only add session token to internal requests (relative URLs starting with /)
         if (typeof url === 'string' && url.startsWith('/')) {
             // Add access token header only to internal requests
-            options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJjcmVhdGVkX2F0IjoxNzU1MjM0MDI1LjI2NjU2MSwiZXhwIjoxNzU1MzIwNDI1LjI2NjU2MSwiaXNzIjoieW91ci1pbnN0YW5jZS1uYW1lIiwiaWF0IjoxNzU1MjM0MDI1LjI2NjU2MX0.nU4oAZqxMhgfiJSyTZonLOsfGxuQVbXMvx9a1YYO58k';
+            options.headers['X-Session-Token'] = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJjcmVhdGVkX2F0IjoxNzU1NDgxMzg0Ljk0MTIwODYsImV4cCI6MTc1NTU2Nzc4NC45NDEyMDg2LCJpc3MiOiJ5b3VyLWluc3RhbmNlLW5hbWUiLCJpYXQiOjE3NTU0ODEzODQuOTQxMjA4Nn0.owOeyZZRueL_sLw0wfpC2wXSko0uyC-n50KL2H4mDkw';
         }
         
         // Call original fetch with modified options
