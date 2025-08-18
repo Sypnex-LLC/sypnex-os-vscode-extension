@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-18 07:08:12.260171
+// Generated: 2025-08-18 07:52:34.020532
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -452,7 +452,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} [options.cancelText='No'] - Text for cancel button
      * @param {string} [options.type='warning'] - Dialog type: 'warning', 'danger', 'info'
      * @param {string} [options.icon='fas fa-exclamation-triangle'] - FontAwesome icon class
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.UI
      * @returns {Promise<boolean>} True if confirmed, false if cancelled
      */
     async showConfirmation(title, message, options = {}) {
@@ -618,7 +618,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} [options.cancelText='Cancel'] - Text for cancel button
      * @param {string} [options.icon='fas fa-edit'] - FontAwesome icon class
      * @param {string} [options.inputType='text'] - Input type: 'text', 'textarea'
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.UI
      * @returns {Promise<string|null>} Input value if confirmed, null if cancelled
      */
     async showInputModal(title, message, options = {}) {
@@ -867,7 +867,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} [options.cancelText='Cancel'] - Text for cancel button
      * @param {string} [options.icon='fas fa-upload'] - FontAwesome icon class
      * @param {string} [options.accept='*'] - File accept types
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.UI
      * @returns {Promise<File|null>} Selected file if confirmed, null if cancelled
      */
     async showFileUploadModal(title, message, options = {}) {
@@ -1274,7 +1274,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} [options.position='right'] - Position of menu ('left' or 'right')
      * @param {string} [options.buttonClass=''] - Additional CSS classes for the button
      * @param {string} [options.menuId=''] - Custom ID for the menu (auto-generated if not provided)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.UI
      * @returns {object} Object with methods to control the menu
      * 
      * @example
@@ -1519,7 +1519,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convert keyboard event to standardized key string
      * @param {KeyboardEvent} event - The keyboard event
      * @returns {string} Standardized key string
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Keyboard
      */
     function eventToKeyString(event) {
         const parts = [];
@@ -1567,7 +1567,7 @@ Object.assign(SypnexAPI.prototype, {
         
         /**
          * Unregister all shortcuts for an application
-         * @memberof SypnexAPI.prototype
+         * @memberof SypnexAPI.Keyboard
          * @param {string} appId - Application identifier
          */
         unregisterApp(appId) {
@@ -1582,7 +1582,7 @@ Object.assign(SypnexAPI.prototype, {
         
         /**
          * Get statistics about registered shortcuts
-         * @memberof SypnexAPI.prototype
+         * @memberof SypnexAPI.Keyboard
          * @returns {object} Statistics object
          */
         getStats() {
@@ -1612,7 +1612,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} config - Configuration options
      * @param {boolean} config.preventDefault - Whether to prevent default behavior (default: true)
      * @param {boolean} config.stopPropagation - Whether to stop event propagation (default: false)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Keyboard
      * @example
      * this.registerKeyboardShortcuts({
      *     'f': () => this.toggleFullscreen(),
@@ -1648,7 +1648,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get keyboard shortcut statistics
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Keyboard
      * @returns {object} Statistics about registered shortcuts
      */
     getKeyboardStats() {
@@ -1814,7 +1814,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Initialize the window management system
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Window
      */
     function initializeWindowManager() {
         if (windowState.isInitialized) return;
@@ -1850,7 +1850,7 @@ Object.assign(SypnexAPI.prototype, {
      * All properties assigned to this window proxy will be automatically cleaned up
      * when the app is closed, preventing memory leaks and conflicts.
      * 
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Window
      * @returns {Object} Window proxy object that tracks property assignments
      * 
      * @example
@@ -1879,7 +1879,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Manually clean up window properties for this app
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Window
      * This is automatically called when the app closes, but can be called manually if needed
      */
     cleanupAppWindow() {
@@ -2113,7 +2113,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Access to scaling utilities
      * @type {object}
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      */
     get scaling() {
         return scalingUtils;
@@ -2121,7 +2121,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Convenience method: Detect current app scale
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {number} Scale factor
      */
     detectAppScale() {
@@ -2131,7 +2131,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Convenience method: Get scaled mouse coordinates
      * @param {Event} e - Mouse event
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {object} Scaled coordinates
      */
     getScaledMouseCoords(e) {
@@ -2141,7 +2141,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Convenience method: Get scaled element bounds
      * @param {Element} element - DOM element
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {object} Scaled bounding rectangle
      */
     getScaledBoundingClientRect(element) {
@@ -2153,7 +2153,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {number} screenX - Screen X coordinate
      * @param {number} screenY - Screen Y coordinate
      * @param {number} [zoomScale=1.0] - Optional zoom scale
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {object} App coordinates
      */
     screenToAppCoords(screenX, screenY, zoomScale = 1.0) {
@@ -2165,7 +2165,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {number} appX - App X coordinate
      * @param {number} appY - App Y coordinate
      * @param {number} [zoomScale=1.0] - Optional zoom scale
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {object} Screen coordinates
      */
     appToScreenCoords(appX, appY, zoomScale = 1.0) {
@@ -2175,7 +2175,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Convenience method: Initialize scale detection
      * @param {function} [onScaleChange] - Callback for scale changes
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Scaling
      * @returns {MutationObserver} Observer instance
      */
     initScaleDetection(onScaleChange = null) {
@@ -2196,7 +2196,7 @@ Object.assign(SypnexAPI.prototype, {
      * @async
      * @param {string} key - Setting key to retrieve
      * @param {*} [defaultValue=null] - Default value if setting not found
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<*>} The setting value or default value
      */
     async getSetting(key, defaultValue = null) {
@@ -2213,7 +2213,7 @@ Object.assign(SypnexAPI.prototype, {
      * @async
      * @param {string} key - Setting key to set
      * @param {*} value - Value to store
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<boolean>} True if saved successfully, false otherwise
      */
     async setSetting(key, value) {
@@ -2241,7 +2241,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get all application settings
      * @async
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<object>} Object containing all app settings
      */
     async getAllSettings() {
@@ -2257,7 +2257,7 @@ Object.assign(SypnexAPI.prototype, {
      * Delete an application setting
      * @async
      * @param {string} key - Setting key to delete
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<boolean>} True if deleted successfully, false otherwise
      */
     async deleteSetting(key) {
@@ -2284,7 +2284,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} category - Preference category
      * @param {string} key - Preference key
      * @param {*} [defaultValue=null] - Default value if preference not found
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<*>} The preference value or default value
      */
     async getPreference(category, key, defaultValue = null) {
@@ -2307,7 +2307,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} category - Preference category
      * @param {string} key - Preference key
      * @param {*} value - Value to store
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Settings
      * @returns {Promise<boolean>} True if saved successfully, false otherwise
      */
     async setPreference(category, key, value) {
@@ -2342,7 +2342,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Encrypt a value using the system's encryption service
      * @param {string|object} value - The value to encrypt (will be JSON.stringify'd if object)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Crypto
      * @returns {Promise<string|null>} The encrypted value as a string, or null if encryption failed
      * @example
      * // Encrypt a simple string
@@ -2382,7 +2382,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Decrypt a value that was previously encrypted with the encrypt() method
      * @param {string} encryptedValue - The encrypted value to decrypt
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Crypto
      * @returns {Promise<string|null>} The decrypted value, or null if decryption failed
      * @example
      * // Decrypt a previously encrypted value
@@ -2455,7 +2455,7 @@ Object.assign(SypnexAPI.prototype, {
      * Connect to Socket.IO server for this app instance
      * @param {string} url - Socket.IO server URL (defaults to current origin)
      * @param {object} options - Socket.IO connection options
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {Promise<boolean>} - Connection success status
      */
     async connectSocket(url = null, options = {}) {
@@ -2576,7 +2576,7 @@ Object.assign(SypnexAPI.prototype, {
     },
     
     /**
-@memberof SypnexAPI.prototype
+@memberof SypnexAPI.Socket
      * Disconnect from Socket.IO server
      */
     disconnectSocket() {
@@ -2592,7 +2592,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Check if Socket.IO is connected
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {boolean} - Connection status
      */
     isSocketConnected() {
@@ -2604,7 +2604,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} event - Event name
      * @param {any} data - Data to send
      * @param {string} room - Room to send to (optional)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {boolean} - Success status
      */
     sendMessage(event, data, room = null) {
@@ -2648,7 +2648,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Join a Socket.IO room
      * @param {string} roomName - Room to join
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {boolean} - Success status
      */
     joinRoom(roomName) {
@@ -2670,7 +2670,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Leave a Socket.IO room
      * @param {string} roomName - Room to leave
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {boolean} - Success status
      */
     leaveRoom(roomName) {
@@ -2691,7 +2691,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Send a ping to test connection
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {Promise<number>} - Ping time in milliseconds
      */
     async ping() {
@@ -2711,7 +2711,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Listen for Socket.IO events
      * @param {string} eventName - Event name to listen for
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {function} callback - Callback function
      */
     on(eventName, callback) {
@@ -2735,7 +2735,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Remove Socket.IO event listener
      * @param {string} eventName - Event name
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {function} callback - Callback function to remove
      */
     off(eventName, callback) {
@@ -2759,7 +2759,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Trigger internal events (for app communication)
      * @param {string} eventName - Event name
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {any} data - Event data
      */
     _triggerEvent(eventName, data) {
@@ -2777,7 +2777,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get the Socket.IO instance
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {object|null} - Socket.IO instance or null
      */
     getSocket() {
@@ -2786,7 +2786,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get Socket.IO connection state
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @returns {object} - Connection state object
      */
     getSocketState() {
@@ -2809,7 +2809,7 @@ Object.assign(SypnexAPI.prototype, {
     // ===== CONNECTION HEALTH MONITORING =====
     
     /**
-@memberof SypnexAPI.prototype
+@memberof SypnexAPI.Socket
      * Start periodic health checks
      */
     startHealthChecks() {
@@ -2824,7 +2824,7 @@ Object.assign(SypnexAPI.prototype, {
     },
     
     /**
-@memberof SypnexAPI.prototype
+@memberof SypnexAPI.Socket
      * Stop periodic health checks
      */
     stopHealthChecks() {
@@ -2835,7 +2835,7 @@ Object.assign(SypnexAPI.prototype, {
     },
     
     /**
-@memberof SypnexAPI.prototype
+@memberof SypnexAPI.Socket
      * Perform a health check ping
      */
     async performHealthCheck() {
@@ -2854,7 +2854,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Enable or disable health checks
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {boolean} enabled - Whether to enable health checks
      */
     setHealthChecks(enabled) {
@@ -2868,7 +2868,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Set health check interval
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {number} intervalMs - Interval in milliseconds
      */
     setHealthCheckInterval(intervalMs) {
@@ -2883,7 +2883,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Enable or disable auto-reconnect
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {boolean} enabled - Whether to enable auto-reconnect
      */
     setAutoReconnect(enabled) {
@@ -2895,7 +2895,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Set auto-reconnect configuration
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @param {object} config - Reconnect configuration
      */
     setReconnectConfig(config) {
@@ -2918,7 +2918,7 @@ Object.assign(SypnexAPI.prototype, {
     },
     
     /**
-@memberof SypnexAPI.prototype
+@memberof SypnexAPI.Socket
      * Manually trigger reconnection
      */
     reconnect() {
@@ -2930,7 +2930,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Schedule a reconnection attempt
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @private
      */
     _scheduleReconnect() {
@@ -2952,7 +2952,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Rejoin rooms after reconnection
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Socket
      * @private
      */
     _rejoinRooms() {
@@ -2981,7 +2981,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get virtual file system statistics
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - System statistics
      */
     async getVirtualFileStats() {
@@ -3001,7 +3001,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * List files and directories in a path
      * @param {string} path - Directory path (defaults to '/')
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Directory contents
      */
     async listVirtualFiles(path = '/') {
@@ -3022,7 +3022,7 @@ Object.assign(SypnexAPI.prototype, {
      * Create a new folder
      * @param {string} name - Folder name
      * @param {string} parentPath - Parent directory path (defaults to '/')
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Creation result
      */
     async createVirtualFolder(name, parentPath = '/') {
@@ -3052,7 +3052,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} name - File name
      * @param {string} content - File content
      * @param {string} parentPath - Parent directory path (defaults to '/')
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Creation result
      */
     async createVirtualFile(name, content = '', parentPath = '/') {
@@ -3081,7 +3081,7 @@ Object.assign(SypnexAPI.prototype, {
      * Upload a file from the host system
      * @param {File} file - File object from input element
      * @param {string} parentPath - Parent directory path (defaults to '/')
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Upload result
      */
     async uploadVirtualFile(file, parentPath = '/') {
@@ -3112,7 +3112,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {File} file - File object from input element
      * @param {string} parentPath - Parent directory path (defaults to '/')
      * @param {Function} progressCallback - Callback for progress updates (percent)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Object} - Object with promise and abort method { promise: Promise<object>, abort: Function }
      */
     uploadVirtualFileChunked(file, parentPath = '/', progressCallback = null) {
@@ -3192,7 +3192,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Read a file's content
      * @param {string} filePath - Path to the file
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - File data
      */
     async readVirtualFile(filePath) {
@@ -3213,7 +3213,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get a file's content as text
      * @param {string} filePath - Path to the file
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<string>} - File content as text
      */
     async readVirtualFileText(filePath) {
@@ -3229,7 +3229,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get a file's content as JSON
      * @param {string} filePath - Path to the file
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Parsed JSON content
      */
     async readVirtualFileJSON(filePath) {
@@ -3245,7 +3245,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get a file's content as Blob (for binary files, images, etc.)
      * @param {string} filePath - Path to the file
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<Blob>} - File content as Blob
      */
     async readVirtualFileBlob(filePath) {
@@ -3265,7 +3265,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Serve a file directly (for binary files, images, etc.)
      * @param {string} filePath - Path to the file
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {string} - Direct URL to serve the file
      */
     getVirtualFileUrl(filePath) {
@@ -3273,7 +3273,7 @@ Object.assign(SypnexAPI.prototype, {
     },    /**
      * Delete a file or directory
      * @param {string} itemPath - Path to the item to delete
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Deletion result
      */
     async deleteVirtualItem(itemPath) {
@@ -3297,7 +3297,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get information about a file or directory
      * @param {string} itemPath - Path to the item
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Item information
      */
     async getVirtualItemInfo(itemPath) {
@@ -3331,7 +3331,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Check if a file or directory exists
      * @param {string} itemPath - Path to the item
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<boolean>} - Whether the item exists
      */
     async virtualItemExists(itemPath) {
@@ -3351,7 +3351,7 @@ Object.assign(SypnexAPI.prototype, {
      * Write content to a file (creates or overwrites)
      * @param {string} filePath - Path to the file
      * @param {string} content - File content
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Write result
      */
     async writeVirtualFile(filePath, content) {
@@ -3380,7 +3380,7 @@ Object.assign(SypnexAPI.prototype, {
      * Write JSON content to a file
      * @param {string} filePath - Path to the file
      * @param {object} data - JSON data to write
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Write result
      */
     async writeVirtualFileJSON(filePath, data) {
@@ -3397,7 +3397,7 @@ Object.assign(SypnexAPI.prototype, {
      * Write binary content to a file using the upload endpoint
      * @param {string} filePath - Path to the file
      * @param {Uint8Array|Blob} binaryData - Binary data to write
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Write result
      */
     async writeVirtualFileBinary(filePath, binaryData) {
@@ -3449,7 +3449,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Create a directory structure (creates parent directories if needed)
      * @param {string} dirPath - Directory path to create
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.VFS
      * @returns {Promise<object>} - Creation result
      */
     async createVirtualDirectoryStructure(dirPath) {
@@ -3492,7 +3492,7 @@ Object.assign(SypnexAPI.prototype, {
      * Load a library from CDN
      * @param {string} url - CDN URL of the library
      * @param {object} options - Loading options
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Libraries
      * @returns {Promise<any>} - Loaded library or true if successful
      */
     async loadLibrary(url, options = {}) {
@@ -3548,7 +3548,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} options.fileExtension - Required file extension (e.g., '.txt')
      * @param {function} options.onSelect - Callback when file is selected
      * @param {function} options.onCancel - Callback when modal is cancelled
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.FileExplorer
      * @returns {Promise<string>} - Selected file path or null if cancelled
      */
     async showFileExplorer(options = {}) {
@@ -4332,7 +4332,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} logData.component - Component type (core-os, user-apps, plugins, services)
      * @param {string} [logData.source] - Source identifier (app name, plugin name, etc.)
      * @param {object} [logData.details] - Additional details object
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async writeLog(logData) {
@@ -4371,7 +4371,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convenience method to write debug log
      * @param {string} message - Log message
      * @param {object} [details] - Additional details
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async logDebug(message, details = {}) {
@@ -4388,7 +4388,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convenience method to write info log
      * @param {string} message - Log message
      * @param {object} [details] - Additional details
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async logInfo(message, details = {}) {
@@ -4405,7 +4405,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convenience method to write warning log
      * @param {string} message - Log message
      * @param {object} [details] - Additional details
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async logWarn(message, details = {}) {
@@ -4422,7 +4422,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convenience method to write error log
      * @param {string} message - Log message
      * @param {object} [details] - Additional details
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async logError(message, details = {}) {
@@ -4439,7 +4439,7 @@ Object.assign(SypnexAPI.prototype, {
      * Convenience method to write critical log
      * @param {string} message - Log message
      * @param {object} [details] - Additional details
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Write result
      */
     async logCritical(message, details = {}) {
@@ -4460,7 +4460,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} [filters.date] - Date to filter by (YYYY-MM-DD format, defaults to today)
      * @param {number} [filters.limit] - Maximum number of logs to return (default: 100)
      * @param {string} [filters.source] - Source to filter by (app name, plugin name, etc.)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Log entries and metadata
      */
     async readLogs(filters = {}) {
@@ -4489,7 +4489,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get available log dates for each component
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Available dates by component
      */
     async getLogDates() {
@@ -4513,7 +4513,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [filters] - Filter options
      * @param {string} [filters.component] - Component to clear (core-os, user-apps, plugins, services, all)
      * @param {string} [filters.date] - Specific date to clear (YYYY-MM-DD format) or 'all' for all dates
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Clear operation result
      */
     async clearLogs(filters = {}) {
@@ -4541,7 +4541,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get logging system statistics
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Logging statistics
      */
     async getLogStats() {
@@ -4563,7 +4563,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Get logs for the current app (convenience method)
      * @param {object} [filters] - Additional filter options
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Logs
      * @returns {Promise<object>} - Log entries for this app
      */
     async getMyLogs(filters = {}) {
@@ -4611,7 +4611,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get available applications from the registry
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @async
      * @returns {Promise<object>} - Available applications data
      */
@@ -4631,7 +4631,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Get list of installed applications
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @async
      * @returns {Promise<Array>} - Array of installed applications
      */
@@ -4651,7 +4651,7 @@ Object.assign(SypnexAPI.prototype, {
     
     /**
      * Update a specific application to the latest version
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @async
      * @param {string} appId - Application ID to update
      * @param {string} downloadUrl - Download URL for the app update (required)
@@ -4694,7 +4694,7 @@ Object.assign(SypnexAPI.prototype, {
     /**
      * Refresh the application registry cache
      * @async
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @returns {Promise<object>} - Refresh result
      */
     async refreshAppRegistry() {
@@ -4725,7 +4725,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {string} appId - Application ID to install
      * @param {object} [options={}] - Installation options
      * @param {string} [options.version] - Specific version to install (defaults to latest)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @returns {Promise<object>} - Installation result
      */
     async installApp(appId, options = {}) {
@@ -4761,7 +4761,7 @@ Object.assign(SypnexAPI.prototype, {
      * Uninstall an application
      * @async
      * @param {string} appId - Application ID to uninstall
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.AppManagement
      * @returns {Promise<object>} - Uninstallation result
      */
     async uninstallApp(appId) {
@@ -4807,7 +4807,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {number} [options.timeout=30] - Request timeout in seconds
      * @param {boolean} [options.followRedirects=true] - Whether to follow redirects
      * @param {boolean} [options.forceProxy=false] - Force use of backend proxy instead of direct CORS
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Response data in proxy format for compatibility
      */
     async proxyHTTP(options) {
@@ -4843,7 +4843,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Make a direct CORS request
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @private
      */
     async _directCORSRequest(options) {
@@ -4954,7 +4954,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Make a request through the backend proxy
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @private
      */
     async _proxyThroughBackend(options) {
@@ -5015,7 +5015,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [options={}] - Additional options
      * @param {object} [options.headers={}] - HTTP headers
      * @param {number} [options.timeout=30] - Request timeout in seconds
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Response data
      */
     async proxyGET(url, options = {}) {
@@ -5034,7 +5034,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [options={}] - Additional options
      * @param {object} [options.headers={}] - HTTP headers
      * @param {number} [options.timeout=30] - Request timeout in seconds
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Response data
      */
     async proxyPOST(url, body, options = {}) {
@@ -5054,7 +5054,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [options={}] - Additional options
      * @param {object} [options.headers={}] - HTTP headers
      * @param {number} [options.timeout=30] - Request timeout in seconds
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Response data
      */
     async proxyPUT(url, body, options = {}) {
@@ -5073,7 +5073,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [options={}] - Additional options
      * @param {object} [options.headers={}] - HTTP headers
      * @param {number} [options.timeout=30] - Request timeout in seconds
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Response data
      */
     async proxyDELETE(url, options = {}) {
@@ -5093,7 +5093,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {object} [options.data] - JSON data to send
      * @param {object} [options.headers={}] - Additional headers
      * @param {number} [options.timeout=30] - Request timeout in seconds
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.Network
      * @returns {Promise<object>} - Parsed JSON response
      */
     async proxyJSON(url, options = {}) {
@@ -5143,7 +5143,7 @@ Object.assign(SypnexAPI.prototype, {
      * @param {number} [options.temperature=0.7] - Temperature (0-1)
      * @param {number} [options.maxTokens=1000] - Maximum tokens to generate
      * @param {boolean} [options.stream=false] - Whether to stream response
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.LLM
      * @returns {Promise<object>} Normalized response: {content, usage, model, provider}
      */
     async llmComplete(options) {
@@ -5219,7 +5219,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Format request for specific provider (private method)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.LLM
      * @private
      */
     _formatLLMRequest(provider, options) {
@@ -5320,7 +5320,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Get headers for specific provider (private method)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.LLM
      * @private
      */
     _getLLMHeaders(provider, apiKey) {
@@ -5358,7 +5358,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Normalize response from provider to OpenAI format (private method)
-     * @memberof SypnexAPI.prototype
+     * @memberof SypnexAPI.LLM
      * @private
      */
     _normalizeLLMResponse(provider, responseData) {
