@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-18 06:57:17.134129
+// Generated: 2025-08-18 07:08:12.260171
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -1920,7 +1920,7 @@ Object.assign(SypnexAPI.prototype, {
  * Scaling utilities for handling app scaling across all user applications
  * Provides methods to handle coordinate transformations, element positioning,
  * and mouse interactions when apps are scaled by the OS
- * @memberof SypnexAPI.prototype
+ * @namespace
  */
 const scalingUtils = {
     // Internal scale cache
@@ -1928,7 +1928,6 @@ const scalingUtils = {
 
     /**
      * Detect the current app scale from CSS transform
-     * @memberof SypnexAPI.prototype
      * @returns {number} Scale factor (1.0 = 100%, 0.8 = 80%, etc.)
      */
     detectAppScale() {
@@ -1982,7 +1981,6 @@ const scalingUtils = {
     /**
      * Get the total effective scale (app scale × optional zoom scale)
      * @param {number} [zoomScale=1.0] - Optional zoom scale to combine with app scale
-     * @memberof SypnexAPI.prototype
      * @returns {number} Combined scale factor
      */
     getEffectiveScale(zoomScale = 1.0) {
@@ -1995,7 +1993,6 @@ const scalingUtils = {
      * @param {number} screenX - Screen X coordinate
      * @param {number} screenY - Screen Y coordinate
      * @param {number} [zoomScale=1.0] - Optional zoom scale
-     * @memberof SypnexAPI.prototype
      * @returns {object} Object with x and y properties in app coordinates
      */
     screenToAppCoords(screenX, screenY, zoomScale = 1.0) {
@@ -2011,7 +2008,6 @@ const scalingUtils = {
      * @param {number} appX - App X coordinate
      * @param {number} appY - App Y coordinate
      * @param {number} [zoomScale=1.0] - Optional zoom scale
-     * @memberof SypnexAPI.prototype
      * @returns {object} Object with x and y properties in screen coordinates
      */
     appToScreenCoords(appX, appY, zoomScale = 1.0) {
@@ -2025,7 +2021,6 @@ const scalingUtils = {
     /**
      * Get scaled element bounding rectangle (compensates for app scaling)
      * @param {Element} element - DOM element to get bounds for
-     * @memberof SypnexAPI.prototype
      * @returns {object} DOMRect-like object with scaled coordinates
      */
     getScaledBoundingClientRect(element) {
@@ -2048,7 +2043,6 @@ const scalingUtils = {
     /**
      * Get scaled mouse coordinates from event (compensates for app scaling only)
      * @param {Event} e - Mouse event
-     * @memberof SypnexAPI.prototype
      * @returns {object} Object with x and y properties in scaled coordinates
      */
     getScaledMouseCoords(e) {
@@ -2062,7 +2056,6 @@ const scalingUtils = {
     /**
      * Initialize scale detection with optional change callback
      * @param {function} [onScaleChange] - Callback function called when scale changes
-     * @memberof SypnexAPI.prototype
      * @returns {MutationObserver} Observer instance for cleanup
      */
     initScaleDetection(onScaleChange = null) {
@@ -2099,7 +2092,6 @@ const scalingUtils = {
 
     /**
      * Get current cached app scale (without re-detection)
-     * @memberof SypnexAPI.prototype
      * @returns {number} Cached app scale factor
      */
     getCurrentScale() {
@@ -2108,7 +2100,6 @@ const scalingUtils = {
 
     /**
      * Force refresh of scale detection
-     * @memberof SypnexAPI.prototype
      * @returns {number} New scale factor
      */
     refreshScale() {
@@ -2130,6 +2121,7 @@ Object.assign(SypnexAPI.prototype, {
 
     /**
      * Convenience method: Detect current app scale
+     * @memberof SypnexAPI.prototype
      * @returns {number} Scale factor
      */
     detectAppScale() {
