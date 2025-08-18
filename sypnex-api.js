@@ -1,5 +1,5 @@
 // SypnexAPI - Dynamically Bundled JavaScript API
-// Generated: 2025-08-18 06:53:39.563846
+// Generated: 2025-08-18 06:57:17.134129
 // Minified: False
 
 // === sypnex-api-core.js ===
@@ -1928,6 +1928,7 @@ const scalingUtils = {
 
     /**
      * Detect the current app scale from CSS transform
+     * @memberof SypnexAPI.prototype
      * @returns {number} Scale factor (1.0 = 100%, 0.8 = 80%, etc.)
      */
     detectAppScale() {
